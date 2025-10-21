@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -17,13 +18,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.titancake.data.model.Producto
 import com.example.titancake.navigation.Routes
+import com.example.titancake.ui.components.pasteles
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.BrownP
 import com.example.titancake.ui.viewmodel.CartViewModel
@@ -88,6 +93,18 @@ fun ItemRow(item: Producto, onClick: () -> Unit, onAddToCart: (Int) -> Unit) {
             .clickable { onClick() }
             .padding(8.dp)
     ) {
+        if (item.productImg.isNotEmpty()) {
+            AsyncImage(
+                model = item.productImg,
+                contentDescription = "Imagen de ${item.nombre}",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
+        }
+
         Text(item.nombre, style = MaterialTheme.typography.titleMedium)
         Text(item.descripcion, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
         Text("Precio: \$${item.precio}", style = MaterialTheme.typography.bodySmall)

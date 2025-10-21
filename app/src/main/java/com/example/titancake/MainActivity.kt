@@ -22,7 +22,6 @@ import com.example.titancake.ui.screens.ProfileScreen
 import com.example.titancake.ui.screens.RegisterScreen
 import com.example.titancake.ui.screens.ShoppingCartScreen
 import com.example.titancake.ui.theme.TitanCakeTheme
-import com.example.titancake.ui.viewmodel.AddViewModel
 import com.example.titancake.ui.viewmodel.CartViewModel
 import com.example.titancake.ui.viewmodel.MainViewModel
 

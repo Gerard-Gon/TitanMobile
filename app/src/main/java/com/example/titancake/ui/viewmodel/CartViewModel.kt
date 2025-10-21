@@ -14,14 +14,19 @@ class CartViewModel : ViewModel() {
 
 
     fun agregarProducto(producto: Producto, cantidad: Int) {
-        val existente = _carrito.value.find { it.producto.id == producto.id }
-        if (existente != null) {
-            existente.cantidad += cantidad
-            _carrito.value = _carrito.value.toList()
+        val actualizado = _carrito.value.map {
+            if (it.producto.id == producto.id) {
+                it.copy(cantidad = it.cantidad + cantidad)
+            } else it
+        }
+
+        if (_carrito.value.any { it.producto.id == producto.id }) {
+            _carrito.value = actualizado
         } else {
             _carrito.value = _carrito.value + ItemCarrito(producto, cantidad)
         }
     }
+
 
     fun quitarUnidad(id: Int) {
         _carrito.value = _carrito.value.mapNotNull {

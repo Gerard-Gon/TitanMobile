@@ -39,9 +39,10 @@ fun RegisterScreen(vm: AddViewModel = viewModel (),onBack: () -> Unit){
             )
         }
     ) {padding -> Column (modifier = Modifier.padding(padding)){
-    TextFieldModificado(vm.formState.value.name,{vm.onChangeName(it)
-    },vm.formState.value.nameError,"Nombre")
+        TextFieldModificado(vm.formState.value.name,{vm.onChangeName(it)
+        },vm.formState.value.nameError,"Nombre")
 
     }}
 
 }
+
