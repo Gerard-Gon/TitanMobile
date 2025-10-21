@@ -3,6 +3,8 @@ package com.example.titancake.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -80,6 +82,8 @@ fun ShoppingCartScreen(
                             ) {
                                 Text("Eliminar")
                             }
+
+
                         }
                     }
                     Divider()
@@ -90,6 +94,16 @@ fun ShoppingCartScreen(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(16.dp)
                 )
+
+                TopAppBar(
+                    title = { Text("Comprar") },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.Default.Done, contentDescription = "Comprar")
+                        }
+                    }
+                )
+
             }
         }
     }

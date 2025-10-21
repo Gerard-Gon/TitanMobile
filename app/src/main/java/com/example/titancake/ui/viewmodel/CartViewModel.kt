@@ -47,4 +47,7 @@ class CartViewModel : ViewModel() {
 
     fun total(): Double = _carrito.value.sumOf { it.producto.precio * it.cantidad }
 
+
+
 }
+
