@@ -65,9 +65,7 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
                 IconButton (onClick = { navController.navigate(Routes.SHOPPINGCART) }) {
                     Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
                 }
-                IconButton(onClick = { navController.navigate(Routes.REGISTER) }) {
-                    Icon(Icons.Default.AccountCircle, contentDescription = "Login")
-                }
+
             }
         )
 
@@ -80,6 +78,8 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
                 Divider()
             }
         }
+
+
     }
 }
 

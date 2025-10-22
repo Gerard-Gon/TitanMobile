@@ -95,14 +95,22 @@ fun ShoppingCartScreen(
                     modifier = Modifier.padding(16.dp)
                 )
 
-                TopAppBar(
-                    title = { Text("Comprar") },
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.Default.Done, contentDescription = "Comprar")
-                        }
-                    }
-                )
+                Button(
+                    onClick = {
+                        cartViewModel.vaciarCarrito()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    shape = MaterialTheme.shapes.medium,
+                    contentPadding = PaddingValues(vertical = 12.dp)
+                ) {
+                    Icon(Icons.Default.Check, contentDescription = "Confirmar compra")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Confirmar compra", style = MaterialTheme.typography.titleMedium)
+                }
+
 
             }
         }
