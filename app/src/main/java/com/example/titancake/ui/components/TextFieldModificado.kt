@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.titancake.ui.theme.BeigeP
+import com.example.titancake.ui.theme.Black
 import com.example.titancake.ui.theme.Green
 import com.example.titancake.ui.theme.LightGray
 import com.example.titancake.ui.theme.PurpleGrey40
@@ -38,7 +39,7 @@ fun TextFieldModificado(newValue: String, onChange: (String) -> Unit, isPassword
         placeholder = {
             Text(
                 label,
-                color =  White.copy(alpha = 0.6f)
+                color =  Black.copy(alpha = 0.9f)
             )
         },
         trailingIcon = {
@@ -47,7 +48,7 @@ fun TextFieldModificado(newValue: String, onChange: (String) -> Unit, isPassword
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Favorite else Icons.Default.Favorite,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                        tint = White
+                        tint = BeigeP
                     )
                 }
             }
@@ -58,10 +59,10 @@ fun TextFieldModificado(newValue: String, onChange: (String) -> Unit, isPassword
             .fillMaxWidth()
             .height(60.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = LightGray.copy(alpha = 0.5f),
-            unfocusedBorderColor = LightGray.copy(alpha = 0.3f),
-            focusedTextColor = White,
-            unfocusedTextColor = White,
+            focusedBorderColor = Black.copy(alpha = 0.5f),
+            unfocusedBorderColor = Black.copy(alpha = 0.3f),
+            focusedTextColor = Black,
+            unfocusedTextColor = Black,
             cursorColor = Green,
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent

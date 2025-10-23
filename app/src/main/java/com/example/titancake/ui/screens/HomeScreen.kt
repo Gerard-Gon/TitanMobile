@@ -38,16 +38,12 @@ import com.example.titancake.ui.viewmodel.MainViewModel
 @Composable
 fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClick: (Int) -> Unit, onClick: () -> Unit, navController: NavHostController ) {
     val productos = viewModel.productos.collectAsState()
-
-    Column(modifier = Modifier.fillMaxSize()
-        .background(BeigeP)
-        .padding(10.dp)
-        ) {
+Scaffold (topBar =
+    {
         TopAppBar(
             title = {
                 Box(
                     contentAlignment = Alignment.Center,
-
                 ) {
                     Text(
                         text = "TITANCAKE MOBILE",
@@ -59,13 +55,13 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
                 }
             }
         )
+    }){ padding->
+    Column(modifier = Modifier.fillMaxSize()
+        .background(BeigeP)
+        .padding(padding)
+        ) {
 
-        CenterAlignedTopAppBar(modifier = Modifier.background(BrownP),
-            title = { Text("Bienvenido a TitanCake", fontWeight = FontWeight.Bold)  },
 
-        )
-
-        TopAppBar(title = { Text("Nuestros Deliciosos Productos") })
         LazyColumn(contentPadding = PaddingValues(8.dp)) {
             items(productos.value) { item ->
                 ItemRow(item = item, onClick = { onItemClick(item.id) },
@@ -75,6 +71,8 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
             }
         }
     }
+}
+
 }
 
 @Composable

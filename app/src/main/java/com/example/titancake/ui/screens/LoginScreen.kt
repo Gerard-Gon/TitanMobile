@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.titancake.ui.components.ButtonModificado
 import com.example.titancake.ui.components.TextFieldModificado
 import com.example.titancake.ui.theme.BeigeP
+import com.example.titancake.ui.theme.Black
 import com.example.titancake.ui.theme.BrownP
 import com.example.titancake.ui.theme.PurpleGrey40
 import com.example.titancake.ui.theme.White
@@ -56,14 +57,14 @@ fun LoginScreen(
     Scaffold { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize().background(BrownP)
+                .fillMaxSize().background(BeigeP)
                 .padding(padding)
         ) {
             Text(
-                text = "Login",
+                text = "Inicio sesion",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
-                color = BeigeP,
+                color = BrownP,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -100,7 +101,7 @@ fun LoginScreen(
             ) {
                 Text(
                     text = "Registrate",
-                    color = White,
+                    color = Black,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable { onNavigateToRegister() }

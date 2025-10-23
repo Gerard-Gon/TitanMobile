@@ -16,6 +16,7 @@ import com.example.titancake.ui.components.TextFieldModificado
 import com.example.titancake.ui.viewmodel.AuthState
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.BrownP
+import com.example.titancake.ui.theme.Gray
 import com.example.titancake.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +31,6 @@ fun RegisterScreen(
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var direccion by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
     val authState by authViewModel.authState.collectAsState()
@@ -48,7 +48,7 @@ fun RegisterScreen(
                     Text(
                         text = "Crear Cuenta",
                         fontWeight = FontWeight.Bold,
-                        color = BeigeP,
+                        color = BrownP,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
@@ -59,14 +59,14 @@ fun RegisterScreen(
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = BrownP // <-- fondo negro
+                    containerColor = BeigeP // <-- fondo negro
                 )
             )
         }
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize().background(BrownP)
+                .fillMaxSize().background(BeigeP)
                 .padding(padding),
         ) {
             Column(
@@ -74,13 +74,7 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                TextFieldModificado(name, { name = it }, false, "Ingrese su nombre completo")
-
-
                 Spacer(modifier = Modifier.height(8.dp))
-
-                TextFieldModificado(direccion, { direccion = it }, false, "Ingrese su direccion")
-
 
                 Spacer(modifier = Modifier.height(8.dp))
 

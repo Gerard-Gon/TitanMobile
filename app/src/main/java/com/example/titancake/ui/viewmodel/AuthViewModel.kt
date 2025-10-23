@@ -36,7 +36,18 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             val result = repository.login(email, password)
             _authState.value = result.fold(
                 onSuccess = { AuthState.Success(it) },
-                onFailure = { AuthState.Error(it.message ?: "Error de login") }
+                onFailure = {
+
+                    val messageAux = it.message
+                    var messageAux2 = "Ha ocurrido un error"
+
+                    if (messageAux == "auth/invalid-email"){
+                        messageAux2 = "El correo es invalido"
+                        println(messageAux2)
+                    }
+                    AuthState.Error(messageAux2 ?: "Error de login")
+
+                }
             )
         }
     }
@@ -47,7 +58,18 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             val result = repository.register(email, password, name)
             _authState.value = result.fold(
                 onSuccess = { AuthState.Success(it) },
-                onFailure = { AuthState.Error(it.message ?: "Error de registro") }
+                onFailure = {
+                    val messageRegAux = it.message
+                    var messageRegAux2 = "Ha ocurrido un error"
+
+                    if(messageRegAux == "auth/invalid-email"){
+                        messageRegAux2 = "El correo es invalido"
+                        println(messageRegAux2)
+                    }else if(messageRegAux =="auth/email-already-exists"){
+                        messageRegAux2="Este email ya existe"
+                        println(messageRegAux2)
+                    }
+                    AuthState.Error(it.message ?: "Error de registro") }
             )
         }
     }

@@ -22,7 +22,7 @@ import com.example.titancake.ui.theme.White
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
     LaunchedEffect(true) {
-        delay(5000)
+        delay(2000)
         onTimeout()
     }
 
