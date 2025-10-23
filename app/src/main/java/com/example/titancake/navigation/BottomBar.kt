@@ -3,6 +3,7 @@ package com.example.titancake.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,6 +14,8 @@ import androidx.navigation.compose.*
 sealed class BottomNavItem(val route: String, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
     object Home : BottomNavItem(Routes.HOME, "Inicio", Icons.Default.Home)
     object Profile : BottomNavItem(Routes.PROFILE, "Perfil", Icons.Default.Person)
+
+    object ShoppingCart : BottomNavItem(Routes.SHOPPINGCART, "Carrito", Icons.Default.ShoppingCart)
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

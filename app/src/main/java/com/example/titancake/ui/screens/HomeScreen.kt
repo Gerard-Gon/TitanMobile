@@ -40,36 +40,32 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
     val productos = viewModel.productos.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()
-        .background(BeigeP)) {
+        .background(BeigeP)
+        .padding(10.dp)
+        ) {
         TopAppBar(
             title = {
                 Box(
-                    modifier = Modifier.fillMaxWidth() .background(BeigeP),
                     contentAlignment = Alignment.Center,
 
                 ) {
                     Text(
-                        text = "TITANCAKE",
+                        text = "TITANCAKE MOBILE",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp,
+                        fontSize = 37.sp,
                         color = BrownP,
                         fontFamily = MaterialTheme.typography.titleLarge.fontFamily,
                     )
                 }
-            },
-            )
-
-        TopAppBar(
-            title = { Text("Bienvenido a TitanCake", fontWeight = FontWeight.Bold)  },
-            actions = {
-                IconButton (onClick = { navController.navigate(Routes.SHOPPINGCART) }) {
-                    Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
-                }
-
             }
         )
 
-        TopAppBar(title = { Text("Lista de Productos") })
+        CenterAlignedTopAppBar(modifier = Modifier.background(BrownP),
+            title = { Text("Bienvenido a TitanCake", fontWeight = FontWeight.Bold)  },
+
+        )
+
+        TopAppBar(title = { Text("Nuestros Deliciosos Productos") })
         LazyColumn(contentPadding = PaddingValues(8.dp)) {
             items(productos.value) { item ->
                 ItemRow(item = item, onClick = { onItemClick(item.id) },
@@ -78,8 +74,6 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
                 Divider()
             }
         }
-
-
     }
 }
 

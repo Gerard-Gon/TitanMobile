@@ -27,7 +27,7 @@ import com.example.titancake.ui.viewmodel.MainViewModel
 fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
     val navController = rememberNavController()
     val cartViewModel: CartViewModel = viewModel()
-    val bottomItems = listOf(BottomNavItem.Home, BottomNavItem.Profile)
+    val bottomItems = listOf(BottomNavItem.Home, BottomNavItem.ShoppingCart,BottomNavItem.Profile)
     val showBottomBarRoutes = listOf(Routes.HOME, Routes.PROFILE, Routes.SHOPPINGCART)
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
@@ -52,6 +52,7 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
                 else navController.navigate("login") { popUpTo("splash") { inclusive = true } }
             }
         }
+
         composable("login") {
             LoginScreen(
                 onLogin = { email, pass -> authViewModel.login(email, pass) },
@@ -109,8 +110,6 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             val id = backStackEntry.arguments?.getInt("itemId") ?: -1
             DetailScreen(itemId = id, viewModel = vm, onBack = { navController.popBackStack() })
         }
-
-
 
     }
 }

@@ -1,5 +1,6 @@
 package com.example.titancake.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -7,11 +8,22 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.titancake.ui.theme.BeigeP
+import com.example.titancake.ui.theme.BrownP
+import com.example.titancake.ui.viewmodel.AuthState
 import com.example.titancake.ui.viewmodel.CartViewModel
+import com.example.titancake.ui.viewmodel.AuthViewModel
+import kotlinx.coroutines.delay
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +33,7 @@ fun ShoppingCartScreen(
 ) {
     val productos = cartViewModel.carrito.collectAsState()
 
-    Scaffold(
+    Scaffold(containerColor = BeigeP,
         topBar = {
             TopAppBar(
                 title = { Text("Carrito de Compras") },
@@ -33,7 +45,8 @@ fun ShoppingCartScreen(
             )
         }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
+
+            Column(modifier = Modifier.padding(padding).background(BeigeP)) {
             if (productos.value.isEmpty()) {
                 Text(
                     text = "Tu carrito está vacío",
@@ -90,9 +103,10 @@ fun ShoppingCartScreen(
                 }
 
                 Text(
-                    text = "Total: \$${cartViewModel.total()}",
+                    text = "Total a Pagar: \$${cartViewModel.total()}",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(16.dp)
+                        .background(BeigeP)
                 )
 
                 Button(
@@ -116,3 +130,5 @@ fun ShoppingCartScreen(
         }
     }
 }
+
+

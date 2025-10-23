@@ -8,6 +8,8 @@ object Routes {
     const val REGISTER = "register"
 
     const val SHOPPINGCART = "shoppingCart"
+
+    const val SPLASH = "splashScreen"
     fun detailRoute(itemId: Int) = "detail/$itemId"
 
 }
