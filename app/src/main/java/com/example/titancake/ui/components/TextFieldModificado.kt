@@ -25,9 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.Black
 import com.example.titancake.ui.theme.Green
-import com.example.titancake.ui.theme.LightGray
-import com.example.titancake.ui.theme.PurpleGrey40
-import com.example.titancake.ui.theme.White
 
 
 @Composable

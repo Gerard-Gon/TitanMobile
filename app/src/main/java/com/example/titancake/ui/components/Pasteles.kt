@@ -32,4 +32,6 @@ val pasteles = listOf(
         precio = 4300.0,
         productImg = "https://i.ytimg.com/vi/n0ymEFZJBho/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBhtYm9G5jq6qA2d7jRuMcwCPhM8A"
     )
+
+
 )

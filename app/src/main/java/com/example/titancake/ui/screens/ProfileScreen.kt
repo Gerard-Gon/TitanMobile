@@ -33,7 +33,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.BrownP
 import com.example.titancake.ui.theme.PurpleGrey40
-import com.example.titancake.ui.viewmodel.AuthState
 import com.example.titancake.ui.viewmodel.AuthViewModel
 
 @Composable

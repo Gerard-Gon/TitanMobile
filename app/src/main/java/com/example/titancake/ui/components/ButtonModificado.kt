@@ -11,8 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.titancake.ui.theme.BeigeP
-import com.example.titancake.ui.theme.BrownP
 import com.example.titancake.ui.theme.Green
 import com.example.titancake.ui.theme.White
 

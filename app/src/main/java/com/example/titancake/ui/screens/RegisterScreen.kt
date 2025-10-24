@@ -16,7 +16,6 @@ import com.example.titancake.ui.components.TextFieldModificado
 import com.example.titancake.ui.viewmodel.AuthState
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.BrownP
-import com.example.titancake.ui.theme.Gray
 import com.example.titancake.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

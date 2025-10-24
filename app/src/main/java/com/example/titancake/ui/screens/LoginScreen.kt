@@ -28,8 +28,6 @@ import com.example.titancake.ui.components.TextFieldModificado
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.Black
 import com.example.titancake.ui.theme.BrownP
-import com.example.titancake.ui.theme.PurpleGrey40
-import com.example.titancake.ui.theme.White
 import com.example.titancake.ui.viewmodel.AuthState
 import com.example.titancake.ui.viewmodel.AuthViewModel
 

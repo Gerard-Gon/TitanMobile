@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,10 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.titancake.ui.theme.BeigeP
-import com.example.titancake.ui.theme.BrownP
-import com.example.titancake.ui.viewmodel.AuthState
+import com.example.titancake.ui.theme.Blue
 import com.example.titancake.ui.viewmodel.CartViewModel
-import com.example.titancake.ui.viewmodel.AuthViewModel
 import kotlinx.coroutines.delay
 
 
@@ -32,6 +29,17 @@ fun ShoppingCartScreen(
     onBack: () -> Unit
 ) {
     val productos = cartViewModel.carrito.collectAsState()
+    var isLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isLoading) {
+        if (isLoading) {
+            delay(3000) // espera 3 segundos
+            cartViewModel.vaciarCarrito()
+            isLoading = false // vuelve al estado normal
+        }
+    }
+
+
 
     Scaffold(containerColor = BeigeP,
         topBar = {
@@ -111,8 +119,9 @@ fun ShoppingCartScreen(
 
                 Button(
                     onClick = {
-                        cartViewModel.vaciarCarrito()
+                        isLoading = true
                     },
+                    enabled = !isLoading,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
@@ -120,12 +129,18 @@ fun ShoppingCartScreen(
                     shape = MaterialTheme.shapes.medium,
                     contentPadding = PaddingValues(vertical = 12.dp)
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = "Confirmar compra")
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Confirmar compra", style = MaterialTheme.typography.titleMedium)
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = Blue,
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Icon(Icons.Default.Check, contentDescription = "Confirmar compra")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Confirmar compra", style = MaterialTheme.typography.titleMedium)
+                    }
                 }
-
-
             }
         }
     }
