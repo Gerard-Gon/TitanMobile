@@ -68,8 +68,8 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
 
         composable("register") {
             RegisterScreen(
-                onRegister = { email, pass, name ->
-                    authViewModel.register(email, pass, name)
+                onRegister = { email, pass, name, confirmpass ->
+                    authViewModel.register(email, pass, name, confirmpass)
                 },
                 onBack = { navController.popBackStack() },
                 onSuccess = {

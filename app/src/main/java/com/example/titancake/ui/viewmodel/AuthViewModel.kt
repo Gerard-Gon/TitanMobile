@@ -3,6 +3,7 @@ package com.example.titancake.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.titancake.data.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -37,39 +38,40 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             _authState.value = result.fold(
                 onSuccess = { AuthState.Success(it) },
                 onFailure = {
-
-                    val messageAux = it.message
-                    var messageAux2 = "Ha ocurrido un error"
-
-                    if (messageAux == "auth/invalid-email"){
-                        messageAux2 = "El correo es invalido"
-                        println(messageAux2)
+                    val errorCode = (it as? FirebaseAuthException)?.errorCode
+                    val messageAux2 = when (errorCode) {
+                        "ERROR_INVALID_EMAIL" -> "El correo es inválido o está mal escrito"
+                        else -> "La contraseña o el correo es incorrecto"
                     }
-                    AuthState.Error(messageAux2 ?: "Error de login")
-
+                    println("Login error: $messageAux2")
+                    AuthState.Error(messageAux2)
                 }
             )
+
         }
     }
 
-    fun register(email: String, password: String, name: String) {
+    fun register(email: String, password: String, name: String, confirmpass: String) {
         viewModelScope.launch {
+
+            if (password != confirmpass) {
+                _authState.value = AuthState.Error("Las contraseñas deben coincidir")
+                return@launch
+            }
+
             _authState.value = AuthState.Loading
             val result = repository.register(email, password, name)
             _authState.value = result.fold(
                 onSuccess = { AuthState.Success(it) },
                 onFailure = {
-                    val messageRegAux = it.message
-                    var messageRegAux2 = "Ha ocurrido un error"
-
-                    if(messageRegAux == "auth/invalid-email"){
-                        messageRegAux2 = "El correo es invalido"
-                        println(messageRegAux2)
-                    }else if(messageRegAux =="auth/email-already-exists"){
-                        messageRegAux2="Este email ya existe"
-                        println(messageRegAux2)
+                    val errorCode = (it as? FirebaseAuthException)?.errorCode
+                    var messageRegAux2 = when (errorCode){
+                        "ERROR_INVALID_EMAIL" -> "El correo es invalido o esta mal escrito"
+                        "ERROR_EMAIL_ALREADY_IN_USE" -> "Este email ya existe"
+                        else -> "Ha ocurrido un error"
                     }
-                    AuthState.Error(it.message ?: "Error de registro") }
+                    println(messageRegAux2)
+                    AuthState.Error(messageRegAux2) }
             )
         }
     }

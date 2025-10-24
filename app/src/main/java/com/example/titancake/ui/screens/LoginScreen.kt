@@ -44,8 +44,19 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var localError by remember { mutableStateOf<String?>(null) }
 
     val authState by authViewModel.authState.collectAsState()
+
+    if (authState is AuthState.Error) {
+        val errorMessage = (authState as AuthState.Error).message
+        Text(
+            text = errorMessage,
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+    }
+
 
 
     LaunchedEffect(authState) {
@@ -79,7 +90,24 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ButtonModificado("Ingresar", { onLogin(email, password) })
+            ButtonModificado("Ingresar", { if (password == "") {
+                localError = "La contraseña no puede estar vacia"
+            } else {
+                localError = null
+                onLogin(email, password)
+            }
+
+
+            })
+
+            localError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -22,7 +22,7 @@ import com.example.titancake.ui.viewmodel.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    onRegister: (String, String, String) -> Unit,
+    onRegister: (String, String, String, String) -> Unit,
     onBack: () -> Unit,
     onSuccess: () -> Unit,
     authViewModel: AuthViewModel
@@ -32,6 +32,8 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var localError by remember { mutableStateOf<String?>(null) }
+
 
     val authState by authViewModel.authState.collectAsState()
 
@@ -96,10 +98,24 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ButtonModificado("Registrarse", {
-                    if (password == confirmPassword) {
-                        onRegister(email.trim(), password.trim(), name.trim())
+                    if (password != confirmPassword) {
+                        localError = "Las contraseñas deben coincidir"
+                    } else {
+                        localError = null
+                        onRegister(email.trim(), password.trim(), name.trim(), confirmPassword.trim())
                     }
                 })
+
+
+                localError?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
