@@ -33,11 +33,11 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
+// Esta función define el tema visual de TitanCake.
 fun TitanCakeTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    darkTheme: Boolean = isSystemInDarkTheme(), // Detectamos si el sistema está en modo oscuro.
+    dynamicColor: Boolean = true, // Activamos colores dinámicos si el dispositivo lo permite.
+    content: @Composable () -> Unit // Contenido que se verá con este tema aplicado.
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -49,6 +49,7 @@ fun TitanCakeTheme(
         else -> LightColorScheme
     }
 
+    // Aplicamos el tema visual a toda la app.
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

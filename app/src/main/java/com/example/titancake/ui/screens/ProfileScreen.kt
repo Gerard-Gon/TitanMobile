@@ -36,17 +36,22 @@ import com.example.titancake.ui.theme.PurpleGrey40
 import com.example.titancake.ui.viewmodel.AuthViewModel
 
 @Composable
+// Esta pantalla muestra el perfil del usuario en TitanCake.
 fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostController) {
+    // Observamos el estado de autenticación (por si el usuario cierra sesión).
     val authState by authViewModel.authState.collectAsState()
+
+    // Variable que guarda la imagen seleccionada por el usuario.
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
+    // Lanzador para abrir la galería y seleccionar una imagen.
     val selectImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        imageUri = uri
+        imageUri = uri // Guardamos la imagen seleccionada.
     }
 
-
+    // Estructura principal de la pantalla.
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,6 +59,7 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Título de la pantalla.
         Text(
             text = "Perfil",
             fontSize = 24.sp,
@@ -63,6 +69,7 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
 
         Spacer(Modifier.height(32.dp))
 
+        // Si el usuario ya seleccionó una imagen, la mostramos dentro de una tarjeta.
         if (imageUri != null) {
             Card(
                 modifier = Modifier
@@ -74,13 +81,15 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
                     painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = "Imagen de perfil",
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop // Recortamos la imagen para que se vea bien.
+
                 )
             }
 
             Spacer(Modifier.height(16.dp))
         }
 
+        // Botón para seleccionar una imagen desde la galería.
         Button(
             onClick = { selectImageLauncher.launch("image/*") },
             colors = ButtonDefaults.buttonColors(containerColor = BrownP),
@@ -92,16 +101,16 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
         Spacer(Modifier.height(32.dp))
 
 
-
+        // Botón para cerrar sesión.
         Button(
             onClick = {
                 try {
                     authViewModel.logout()
                     navControllerApp.navigate("login") {
-                        popUpTo("home") { inclusive = true }
+                        popUpTo("home") { inclusive = true } // Volvemos al login y limpiamos el historial.
                     }
                 } catch (err: Exception) {
-
+                    // Si algo falla, lo ignoramos por ahora.
                 }
 
             },

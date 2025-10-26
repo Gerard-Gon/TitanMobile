@@ -28,33 +28,40 @@ import com.example.titancake.ui.theme.Green
 
 
 @Composable
+// Este es un campo de texto personalizado que se adapta según si es para escribir una contraseña o un dato normal.
 fun TextFieldModificado(newValue: String, onChange: (String) -> Unit, isPassword: Boolean, label: String) {
+    // Esta variable recuerda si la contraseña está visible o no.
     var passwordVisible by remember { mutableStateOf(false) }
     OutlinedTextField(
-        value = newValue,
-        onValueChange = onChange,
+        value = newValue, // Mostramos el valor actual del campo.
+        onValueChange = onChange,  // Actualizamos el valor cuando el usuario escribe.
+        // Este es el texto guía que aparece cuando el campo está vacío.
         placeholder = {
             Text(
                 label,
-                color =  Black.copy(alpha = 0.9f)
+                color =  Black.copy(alpha = 0.9f) // Color ligeramente transparente para que se vea suave.
             )
         },
+        // Si el campo es de contraseña, mostramos un ícono para mostrar/ocultar el texto.
         trailingIcon = {
             if (isPassword) {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Favorite else Icons.Default.Favorite,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                        tint = BeigeP
+                        tint = BeigeP // Color personalizado para el ícono.
                     )
                 }
             }
 
         },
+        // Si es contraseña, ocultamos el texto con puntitos. Si no, lo mostramos normalmente.
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        // Estilo del campo.
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp),
+        // Colores personalizados para bordes, texto y cursor.
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Black.copy(alpha = 0.5f),
             unfocusedBorderColor = Black.copy(alpha = 0.3f),
@@ -66,6 +73,6 @@ fun TextFieldModificado(newValue: String, onChange: (String) -> Unit, isPassword
         ),
         shape = RoundedCornerShape(30.dp),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true
+        singleLine = true // Solo permite una línea de texto.
     )
 }

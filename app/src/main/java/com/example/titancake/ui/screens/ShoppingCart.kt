@@ -24,13 +24,17 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+// Esta pantalla muestra el carrito de compras del usuario.
 fun ShoppingCartScreen(
-    cartViewModel: CartViewModel,
-    onBack: () -> Unit
+    cartViewModel: CartViewModel, // ViewModel que maneja la lógica del carrito.
+    onBack: () -> Unit // Acción que se ejecuta al tocar el botón de retroceso.
 ) {
+    // Obtenemos la lista de productos en el carrito en tiempo real.
     val productos = cartViewModel.carrito.collectAsState()
+    // Variable que indica si estamos en proceso de compra
     var isLoading by remember { mutableStateOf(false) }
 
+    // Si el usuario confirma la compra, esperamos 3 segundos y vaciamos el carrito.
     LaunchedEffect(isLoading) {
         if (isLoading) {
             delay(3000) // espera 3 segundos
@@ -40,7 +44,7 @@ fun ShoppingCartScreen(
     }
 
 
-
+    // Estructura principal de la pantalla con barra superior.
     Scaffold(containerColor = BeigeP,
         topBar = {
             TopAppBar(
@@ -55,14 +59,16 @@ fun ShoppingCartScreen(
     ) { padding ->
 
             Column(modifier = Modifier.padding(padding).background(BeigeP)) {
-            if (productos.value.isEmpty()) {
-                Text(
-                    text = "Tu carrito está vacío",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(16.dp)
-                )
+                // Si el carrito está vacío, mostramos un mensaje.
+                if (productos.value.isEmpty()) {
+                    Text(
+                        text = "Tu carrito está vacío",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(16.dp)
+                    )
             } else {
-                productos.value.forEach { item ->
+                    // Mostramos cada producto en el carrito.
+                    productos.value.forEach { item ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -84,6 +90,7 @@ fun ShoppingCartScreen(
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
+                        // Botones para modificar la cantidad o eliminar el producto.
                         Row {
                             Button(
                                 onClick = { cartViewModel.quitarUnidad(item.producto.id) },
@@ -109,15 +116,16 @@ fun ShoppingCartScreen(
                     }
                     Divider()
                 }
-
+                    // Mostramos el total a pagar.
                 Text(
                     text = "Total a Pagar: \$${cartViewModel.total()}",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(16.dp)
                         .background(BeigeP)
                 )
+                    // Botón para confirmar la compra.
 
-                Button(
+                    Button(
                     onClick = {
                         isLoading = true
                     },
@@ -129,13 +137,16 @@ fun ShoppingCartScreen(
                     shape = MaterialTheme.shapes.medium,
                     contentPadding = PaddingValues(vertical = 12.dp)
                 ) {
+
                     if (isLoading) {
+                        // Mostramos un indicador de carga mientras se procesa la compra.
                         CircularProgressIndicator(
                             color = Blue,
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(24.dp)
                         )
                     } else {
+                        // Ícono y texto del botón cuando está listo para confirmar.
                         Icon(Icons.Default.Check, contentDescription = "Confirmar compra")
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Confirmar compra", style = MaterialTheme.typography.titleMedium)

@@ -17,26 +17,32 @@ import com.example.titancake.ui.theme.White
 
 
 @Composable
+// Esta pantalla se muestra brevemente al iniciar la app.
 fun SplashScreen(onTimeout: () -> Unit) {
+    // Usamos LaunchedEffect para esperar 2 segundos y luego ejecutar la acción de salida
     LaunchedEffect(true) {
         delay(2000)
         onTimeout()
     }
 
+    // Caja principal que ocupa toda la pantalla.
     Box(modifier = Modifier.fillMaxSize()) {
+        // Mostramos el logo de la app ocupando.
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.FillBounds, // La imagen se ajusta al tamaño completo.
             modifier = Modifier.fillMaxSize()
         )
 
+        // Capa semitransparente encima del logo
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(BrownP.copy(alpha = 0.5f))
         )
-        
+
+        // Indicador de carga centrado en la pantalla.
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

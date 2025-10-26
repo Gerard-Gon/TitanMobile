@@ -23,35 +23,45 @@ import com.example.titancake.ui.viewmodel.CartViewModel
 import com.example.titancake.ui.viewmodel.MainViewModel
 
 @Composable
+// Esta función define toda la navegación de la app TitanCake.
 fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
+    // Creamos el controlador de navegación, que nos permite movernos entre pantallas.
     val navController = rememberNavController()
+    // Creamos el ViewModel del carrito, que guarda los productos.
     val cartViewModel: CartViewModel = viewModel()
+    // Definimos los ítems que aparecerán en la barra inferior de navegación.
     val bottomItems = listOf(BottomNavItem.Home, BottomNavItem.ShoppingCart,BottomNavItem.Profile)
+    // Estas son las rutas donde queremos que se muestre la barra inferior.
     val showBottomBarRoutes = listOf(Routes.HOME, Routes.PROFILE, Routes.SHOPPINGCART)
+    // Obtenemos la ruta actual para saber si debemos mostrar la barra inferior.
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
     val showBottomBar = currentRoute in showBottomBarRoutes
 
+    // Usamos Scaffold para estructurar la pantalla y agregar la barra inferior si corresponde.
     Scaffold(
         bottomBar = {
             if (showBottomBar) BottomBar(navController = navController, items = bottomItems)
         }
     ) { innerPadding ->
 
+    // Aqui definimos todas las rutas posibles de la app.
     NavHost(
         navController = navController,
-        startDestination = "splash",
+        startDestination = "splash", // Pantalla inicial
         modifier = Modifier.padding(innerPadding)
     ) {
-
+        // Pantalla de presentacion (Splash)
         composable("splash") {
             SplashScreen {
-                // después de splash, decide:
+                // después de mostrar el splash, decidimos a donde ir:
+                // Si el usuaario esta logueado, lo llevamos al "home" si no a la pantalla de "login"
                 if (isLoggedIn) navController.navigate("home") { popUpTo("splash") { inclusive = true } }
                 else navController.navigate("login") { popUpTo("splash") { inclusive = true } }
             }
         }
 
+        // Pantallla de inicio de sesion.
         composable("login") {
             LoginScreen(
                 onLogin = { email, pass -> authViewModel.login(email, pass) },
@@ -65,6 +75,7 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             )
         }
 
+        // Pantalla de registro de usuario.
         composable("register") {
             RegisterScreen(
                 onRegister = { email, pass, name, confirmpass ->
@@ -80,20 +91,22 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             )
         }
 
+        // Pantalla principal donde se muestran los productos
         composable(Routes.HOME) {
             val vm: MainViewModel = viewModel()
-            HomeScreen(viewModel = vm, cartViewModel = cartViewModel,onItemClick = { id ->
+            HomeScreen(viewModel = vm, cartViewModel = cartViewModel,onItemClick = { id -> // Si el usuario toca un producto, lo llevamos a la pantalla de detalle.
                 navController.navigate(Routes.detailRoute(id))
             }, onClick = {
 
             }, navController = navController)
         }
 
+        // Pantalla de perfil del usuario.
         composable(Routes.PROFILE) {
             ProfileScreen(authViewModel = authViewModel, navControllerApp = navController)
         }
 
-
+        // Pantalla de carrito de compras.
         composable(Routes.SHOPPINGCART) {
             ShoppingCartScreen(
                 cartViewModel = cartViewModel,
@@ -101,6 +114,7 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             )
         }
 
+        // Pantalla de detalle de un producto específico
         composable(
             route = Routes.DETAIL,
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })

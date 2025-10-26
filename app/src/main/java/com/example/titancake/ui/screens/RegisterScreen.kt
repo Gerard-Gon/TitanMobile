@@ -20,6 +20,7 @@ import com.example.titancake.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+// Esta pantalla permite al usuario crear una cuenta en TitanCake.
 fun RegisterScreen(
     onRegister: (String, String, String, String) -> Unit,
     onBack: () -> Unit,
@@ -27,21 +28,26 @@ fun RegisterScreen(
     authViewModel: AuthViewModel
 
 ) {
+    // Variables para guardar lo que el usuario escribe.
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
+    // Variable para mostrar errores locales (como contraseñas que no coinciden).
     var localError by remember { mutableStateOf<String?>(null) }
 
-
+    // Observamos el estado de autenticación.
     val authState by authViewModel.authState.collectAsState()
 
+    // Si el estado cambia a éxito, ejecutamos la función de éxito
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             onSuccess()
         }
     }
 
+    // Estructura principal de la pantalla con barra superior.
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,23 +85,25 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Campo para escribir el correo.
                 TextFieldModificado(email, { email = it }, false, "Correo")
 
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-
+                // Campo para escribir la contraseña.
                 TextFieldModificado(password, { password = it }, true, "Contraseña")
 
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-
+                // Campo para confirmar la contraseña.
                 TextFieldModificado(confirmPassword, { confirmPassword = it }, true, "Confirmar contraseña")
 
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Botón para registrarse.
                 ButtonModificado("Registrarse", {
                     if (password != confirmPassword) {
                         localError = "Las contraseñas deben coincidir"
@@ -105,7 +113,7 @@ fun RegisterScreen(
                     }
                 })
 
-
+                // Si hay un error local, lo mostramos.
                 localError?.let {
                     Text(
                         text = it,
@@ -118,6 +126,7 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Mostramos un indicador de carga o error según el estado de autenticación.
                 when (authState) {
                     is AuthState.Loading -> CircularProgressIndicator()
                     is AuthState.Error -> Text(
