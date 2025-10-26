@@ -8,7 +8,7 @@ val pasteles = listOf(
         nombre = "Pastel de Chocolate",
         descripcion = "Delicioso pastel con cobertura de chocolate amargo y relleno cremoso.",
         precio = 4500.0,
-        productImg = "https://patitasco.com/img/ybc_blog/post/1-caca-perro-portada-patitasco.jpg"
+        productImg = "https://www.cocinadelirante.com/sites/default/files/images/2020/03/como-hacer-pastel-de-chocolate-con-cerveza-y-betun.jpg"
     ),
     Producto(
         id = 2,

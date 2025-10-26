@@ -25,6 +25,7 @@ import coil.compose.AsyncImage
 import com.example.titancake.data.model.Producto
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.BrownP
+import com.example.titancake.ui.theme.White
 import com.example.titancake.ui.viewmodel.CartViewModel
 import com.example.titancake.ui.viewmodel.MainViewModel
 
@@ -42,18 +43,28 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
         TopAppBar(
             title = {
                 Box(
-                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                    contentAlignment = Alignment.Center
+
+
                 ) {
                     Text(
+
                         text = "TITANCAKE MOBILE", // Nombre de la app.
                         fontWeight = FontWeight.Bold, // Texto en negrita.
                         fontSize = 37.sp, // Tamaño grande para destacar.
                         color = BrownP, // Color personalizado.
                         fontFamily = MaterialTheme.typography.titleLarge.fontFamily,
+
                     )
                 }
-            }
+            },  colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = BeigeP // o tu color personalizado
+            )
         )
+
     }){ padding->
         // Contenido principal de la pantalla.
         Column(modifier = Modifier.fillMaxSize()
@@ -111,14 +122,23 @@ fun ItemRow(item: Producto, onClick: () -> Unit, onAddToCart: (Int) -> Unit) {
 
         // Controles para elegir la cantidad.
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = { if (cantidad > 1) cantidad-- }) { Text("-") } // Disminuir cantidad.
+            Button(onClick = { if (cantidad > 1) cantidad-- }, colors = ButtonDefaults.buttonColors(
+                containerColor = BrownP,  // Color principal del botón
+                disabledContainerColor = BrownP.copy(alpha = 0.5f) // Color cuando está desactivado
+            )) { Text("-") } // Disminuir cantidad.
             Text("$cantidad", modifier = Modifier.padding(horizontal = 8.dp)) // Mostrar cantidad actual.
-            Button(onClick = { cantidad++ }) { Text("+") } // Aumentar cantidad.
+            Button(onClick = { cantidad++ }, colors = ButtonDefaults.buttonColors(
+                containerColor = BrownP,  // Color principal del botón
+                disabledContainerColor = BrownP.copy(alpha = 0.5f) // Color cuando está desactivado
+            )) { Text("+") } // Aumentar cantidad.
 
         }
 
         // Botón para agregar el producto al carrito con la cantidad elegida.
-        Button(onClick = { onAddToCart(cantidad) }, modifier = Modifier.padding(top = 4.dp)) {
+        Button(onClick = { onAddToCart(cantidad) }, modifier = Modifier.padding(top = 4.dp), colors = ButtonDefaults.buttonColors(
+            containerColor = BrownP,  // Color principal del botón
+            disabledContainerColor = BrownP.copy(alpha = 0.5f) // Color cuando está desactivado
+        )) {
             Text("Agregar al carrito")
         }
     }

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.titancake.ui.theme.BrownP
 import com.example.titancake.ui.theme.Green
 import com.example.titancake.ui.theme.White
 
@@ -27,8 +28,8 @@ fun ButtonModificado(
             .fillMaxWidth()
             .height(56.dp),  // Tiene una altura fija de 56dp
         colors = ButtonDefaults.buttonColors(
-            containerColor = Green,  // Color principal del botón
-            disabledContainerColor = Green.copy(alpha = 0.5f) // Color cuando está desactivado
+            containerColor = BrownP,  // Color principal del botón
+            disabledContainerColor = BrownP.copy(alpha = 0.5f) // Color cuando está desactivado
         ),
         shape = RoundedCornerShape(28.dp), // Bordes redondeados como si fuera un pastelito suave.
         enabled = enabled  // Activamos o desactivamos el botón según el parámetro.

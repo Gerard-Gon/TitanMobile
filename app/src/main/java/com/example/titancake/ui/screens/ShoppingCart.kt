@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.Blue
+import com.example.titancake.ui.theme.BrownP
 import com.example.titancake.ui.viewmodel.CartViewModel
 import kotlinx.coroutines.delay
 
@@ -94,19 +95,22 @@ fun ShoppingCartScreen(
                         Row {
                             Button(
                                 onClick = { cartViewModel.quitarUnidad(item.producto.id) },
-                                contentPadding = PaddingValues(horizontal = 8.dp)
+                                contentPadding = PaddingValues(horizontal = 8.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = BrownP)
                             ) {
                                 Text("-")
                             }
                             Button(
                                 onClick = { cartViewModel.agregarProducto(item.producto, 1) },
-                                contentPadding = PaddingValues(horizontal = 8.dp)
+                                contentPadding = PaddingValues(horizontal = 8.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = BrownP)
                             ) {
                                 Text("+")
                             }
                             Button(
                                 onClick = { cartViewModel.eliminarProducto(item.producto.id) },
-                                contentPadding = PaddingValues(horizontal = 8.dp)
+                                contentPadding = PaddingValues(horizontal = 8.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = BrownP)
                             ) {
                                 Text("Eliminar")
                             }
@@ -133,7 +137,7 @@ fun ShoppingCartScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(containerColor = BrownP),
                     shape = MaterialTheme.shapes.medium,
                     contentPadding = PaddingValues(vertical = 12.dp)
                 ) {
