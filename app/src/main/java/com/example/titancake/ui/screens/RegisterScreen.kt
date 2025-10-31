@@ -62,7 +62,7 @@ fun RegisterScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = BeigeP)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = BrownP)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -104,7 +104,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Botón para registrarse.
-                ButtonModificado("Registrarse", {
+                ButtonModificado("REGISTRATE",{
                     if (password != confirmPassword) {
                         localError = "Las contraseñas deben coincidir"
                     } else {

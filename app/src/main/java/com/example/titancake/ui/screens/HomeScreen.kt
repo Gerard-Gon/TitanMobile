@@ -47,8 +47,6 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
                         .fillMaxWidth()
                         .padding(5.dp),
                     contentAlignment = Alignment.Center
-
-
                 ) {
                     Text(
 
@@ -60,7 +58,7 @@ fun HomeScreen(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClic
 
                     )
                 }
-            },  colors = TopAppBarDefaults.topAppBarColors(
+            }, colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = BeigeP // o tu color personalizado
             )
         )

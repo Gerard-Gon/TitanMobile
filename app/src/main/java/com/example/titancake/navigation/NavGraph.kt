@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.titancake.ui.screens.BoletaScreen
 import com.example.titancake.ui.screens.DetailScreen
 import com.example.titancake.ui.screens.HomeScreen
 import com.example.titancake.ui.screens.LoginScreen
@@ -110,8 +111,28 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
         composable(Routes.SHOPPINGCART) {
             ShoppingCartScreen(
                 cartViewModel = cartViewModel,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onConfirm = { navController.navigate("boleta") }
             )
+        }
+
+        composable("cart") {
+            ShoppingCartScreen(
+                cartViewModel = cartViewModel,
+                onBack = { navController.popBackStack() },
+                onConfirm = { navController.navigate("boleta") }
+            )
+        }
+        composable("boleta") {
+            BoletaScreen(
+                cartViewModel = cartViewModel,
+                onTimeout = {
+                    navController.navigate("home") {
+                        popUpTo("boleta") { inclusive = true } // elimina boleta del backstack
+                    }
+                }
+            )
+
         }
 
         // Pantalla de detalle de un producto específico

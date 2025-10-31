@@ -28,7 +28,9 @@ import kotlinx.coroutines.delay
 // Esta pantalla muestra el carrito de compras del usuario.
 fun ShoppingCartScreen(
     cartViewModel: CartViewModel, // ViewModel que maneja la lógica del carrito.
-    onBack: () -> Unit // Acción que se ejecuta al tocar el botón de retroceso.
+    onBack: () -> Unit,
+    onConfirm: () -> Unit
+// Acción que se ejecuta al tocar el botón de retroceso.
 ) {
     // Obtenemos la lista de productos en el carrito en tiempo real.
     val productos = cartViewModel.carrito.collectAsState()
@@ -38,8 +40,8 @@ fun ShoppingCartScreen(
     // Si el usuario confirma la compra, esperamos 3 segundos y vaciamos el carrito.
     LaunchedEffect(isLoading) {
         if (isLoading) {
-            delay(3000) // espera 3 segundos
-            cartViewModel.vaciarCarrito()
+            delay(3000)
+            onConfirm()
             isLoading = false // vuelve al estado normal
         }
     }
