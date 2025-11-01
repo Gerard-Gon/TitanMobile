@@ -104,7 +104,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Botón para registrarse.
-                ButtonModificado("REGISTRATE",{
+                ButtonModificado("Registrarse", {
                     if (password != confirmPassword) {
                         localError = "Las contraseñas deben coincidir"
                     } else {
