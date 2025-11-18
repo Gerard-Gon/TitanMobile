@@ -15,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.titancake.ui.theme.BeigeP
 import com.example.titancake.ui.theme.Blue
@@ -28,7 +30,6 @@ import kotlinx.coroutines.delay
 // Esta pantalla muestra el carrito de compras del usuario.
 fun ShoppingCartScreen(
     cartViewModel: CartViewModel, // ViewModel que maneja la lógica del carrito.
-    onBack: () -> Unit,
     onConfirm: () -> Unit
 // Acción que se ejecuta al tocar el botón de retroceso.
 ) {
@@ -51,13 +52,18 @@ fun ShoppingCartScreen(
     Scaffold(containerColor = BeigeP,
         topBar = {
             TopAppBar(
-                title = { Text("Carrito de Compras") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Atrás")
-                    }
-                }
-            )
+                title = { Box(modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center)
+                {
+                    Text("Carrito de Compras",
+                        color = BrownP,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge)
+                } },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = BeigeP)
+
+                )
         }
     ) { padding ->
 

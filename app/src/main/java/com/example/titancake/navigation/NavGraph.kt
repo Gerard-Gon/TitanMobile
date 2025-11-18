@@ -111,7 +111,6 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
         composable(Routes.SHOPPINGCART) {
             ShoppingCartScreen(
                 cartViewModel = cartViewModel,
-                onBack = { navController.popBackStack() },
                 onConfirm = { navController.navigate("boleta") }
             )
         }
@@ -119,7 +118,6 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
         composable("cart") {
             ShoppingCartScreen(
                 cartViewModel = cartViewModel,
-                onBack = { navController.popBackStack() },
                 onConfirm = { navController.navigate("boleta") }
             )
         }
