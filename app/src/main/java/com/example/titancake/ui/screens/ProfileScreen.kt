@@ -100,6 +100,16 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
 
         Spacer(Modifier.height(32.dp))
 
+        Button(
+            onClick = { navControllerApp.navigate("get") },
+            colors = ButtonDefaults.buttonColors(containerColor = BrownP),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Manejo de Productos", color = BeigeP)
+        }
+
+        Spacer(Modifier.height(32.dp))
+
 
         // Botón para cerrar sesión.
         Button(

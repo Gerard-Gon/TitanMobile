@@ -7,19 +7,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.titancake.ui.viewmodel.PostViewModel
+import com.example.titancake.ui.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen(viewModel: PostViewModel) {
+fun PostScreen(viewModel: MainViewModel) {
     // Observamos el flujo de datos del ViewModel
-    val posts by viewModel.postList.collectAsState()
+    val productos by viewModel.productoList.collectAsState()
 
     // Scaffold con TopAppBar
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Listado de Posts") }
+                title = { Text(text = "Listado de Productos") }
             )
         }
     ) { innerPadding ->
@@ -35,7 +35,7 @@ fun PostScreen(viewModel: PostViewModel) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                items(posts) { post ->
+                items(productos) { productos ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -44,14 +44,13 @@ fun PostScreen(viewModel: PostViewModel) {
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Título: ${post.title}",
+                                text = "Nombre Producto: ${productos.nombre}" +
+                                        "Descripcion: ${productos.descripcion}" +
+                                        "Precio: $${productos.precio}",
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = post.body,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.titancake.data.repository
 import com.example.titancake.data.model.Producto
+import com.example.titancake.data.remote.RetrofitInstance
 import com.example.titancake.ui.components.pasteles
 
 class ProductoRepository {
@@ -12,5 +13,9 @@ class ProductoRepository {
 
     // Esta función busca un producto específico por su ID.
     fun getById(id: Int): Producto? = productos.find { it.id == id }
+
+    suspend fun getProductos(): List<Producto> {
+        return RetrofitInstance.api.getProductos()
+    }
 
 }

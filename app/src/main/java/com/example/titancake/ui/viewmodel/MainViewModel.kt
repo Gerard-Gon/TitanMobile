@@ -29,5 +29,29 @@ class MainViewModel(
 
     // Función para obtener un producto específico por su ID.
     fun getProducto(id: Int): Producto? = repo.getById(id)
+
+
+    // ULTIMO AÑADIDO *******
+
+    private val _productoList = MutableStateFlow<List<Producto>>(emptyList())
+
+    // Flujo público de solo lectura
+    val productoList: StateFlow<List<Producto>> = _productoList
+
+    // Se llama automáticamente al iniciar
+    init {
+        fetchProductos()
+    }
+
+    // Función que obtiene los datos en segundo plano
+    private fun fetchProductos() {
+        viewModelScope.launch {
+            try {
+                _productoList.value = repo.getProductos()
+            } catch (e: Exception) {
+                println("Error al obtener datos: ${e.localizedMessage}")
+            }
+        }
+    }
 }
 

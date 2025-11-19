@@ -15,6 +15,7 @@ import com.example.titancake.ui.screens.BoletaScreen
 import com.example.titancake.ui.screens.DetailScreen
 import com.example.titancake.ui.screens.HomeScreen
 import com.example.titancake.ui.screens.LoginScreen
+import com.example.titancake.ui.screens.PostScreen
 import com.example.titancake.ui.screens.ProfileScreen
 import com.example.titancake.ui.screens.RegisterScreen
 import com.example.titancake.ui.screens.ShoppingCartScreen
@@ -141,6 +142,11 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             val vm: MainViewModel = viewModel()
             val id = backStackEntry.arguments?.getInt("itemId") ?: -1
             DetailScreen(itemId = id, viewModel = vm, onBack = { navController.popBackStack() })
+        }
+
+        composable("get") {
+            val viewModel: MainViewModel = viewModel()
+            PostScreen(viewModel = viewModel)
         }
 
     }
