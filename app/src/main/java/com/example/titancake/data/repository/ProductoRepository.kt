@@ -1,9 +1,13 @@
 package com.example.titancake.data.repository
 import com.example.titancake.data.model.Producto
 import com.example.titancake.data.remote.RetrofitInstance
-import com.example.titancake.ui.components.pasteles
+import com.example.titancake.data.model.pasteles
 
-class ProductoRepository {
+interface ProductoRepositoryInterface {
+    suspend fun getProductos(): List<Producto>
+}
+
+class ProductoRepository : ProductoRepositoryInterface{
 
     // Esta lista contiene todos los productos disponibles en TitanCake.
     private val productos = pasteles
@@ -14,8 +18,9 @@ class ProductoRepository {
     // Esta función busca un producto específico por su ID.
     fun getById(id: Int): Producto? = productos.find { it.id == id }
 
-    suspend fun getProductos(): List<Producto> {
+    override suspend fun getProductos(): List<Producto> {
         return RetrofitInstance.api.getProductos()
     }
+
 
 }

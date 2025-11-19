@@ -21,7 +21,7 @@ import com.example.titancake.ui.theme.White
 fun SplashScreen(onTimeout: () -> Unit) {
     // Usamos LaunchedEffect para esperar 2 segundos y luego ejecutar la acción de salida
     LaunchedEffect(true) {
-        delay(2000)
+        delay(1500)
         onTimeout()
     }
 

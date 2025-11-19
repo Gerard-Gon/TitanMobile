@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -47,7 +48,7 @@ fun TextFieldModificado(newValue: String, onChange: (String) -> Unit, isPassword
             if (isPassword) {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
-                        imageVector = if (passwordVisible) Icons.Default.Favorite else Icons.Default.Favorite,
+                        imageVector = if (passwordVisible) Icons.Default.Favorite else Icons.Default.Lock,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
                         tint = BeigeP // Color personalizado para el ícono.
                     )

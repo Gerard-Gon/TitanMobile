@@ -10,6 +10,8 @@ object Routes {
 
     const val SHOPPINGCART = "shoppingCart"
 
+    const val ADMIN = "Admin"
+
     const val SPLASH = "splashScreen"
     fun detailRoute(itemId: Int) = "detail/$itemId"
 

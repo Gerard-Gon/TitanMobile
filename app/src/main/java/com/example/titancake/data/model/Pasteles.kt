@@ -1,6 +1,4 @@
-package com.example.titancake.ui.components
-
-import com.example.titancake.data.model.Producto
+package com.example.titancake.data.model
 
 val pasteles = listOf(
     Producto(
