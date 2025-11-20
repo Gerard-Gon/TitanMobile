@@ -15,6 +15,9 @@ interface ApiService {
     @GET("api/v1/productos")
     suspend fun getProductos(): List<Producto>
 
+    @GET("api/v1/productos/{id}")
+    suspend fun getProductoById(@Path("id") id: Int): Producto
+
     @PUT("api/v1/productos/{id}")
     suspend fun updateProducto(
         @Path("id") id: Int,

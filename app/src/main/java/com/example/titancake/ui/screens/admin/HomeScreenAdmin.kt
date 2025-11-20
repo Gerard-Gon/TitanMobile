@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,10 @@ import com.example.titancake.ui.viewmodel.MainViewModel
 @Composable
 // Esta es la pantalla principal de TitanCake.
 fun HomeScreenAdmin(viewModel: MainViewModel,cartViewModel: CartViewModel ,onItemClick: (Int) -> Unit, onClick: () -> Unit, navController: NavHostController ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchProductos()
+    }
 
     // Obtenemos la lista de productos en tiempo real.
     val productos = viewModel.productosList.collectAsState()

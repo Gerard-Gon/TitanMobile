@@ -3,6 +3,7 @@ package com.example.titancake.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.titancake.data.model.Producto
+import com.example.titancake.data.remote.RetrofitInstance
 import com.example.titancake.data.repository.ProductoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,9 @@ class MainViewModel(
 ) : ViewModel() {
 
     // Estado interno que guarda la lista de productos disponibles.
+
+    private val apiService = RetrofitInstance.api
+
     protected val _productos = MutableStateFlow<List<Producto>>(emptyList())
 
     open val productosList: StateFlow<List<Producto>> = _productos
@@ -36,6 +40,14 @@ class MainViewModel(
 
     fun getProducto(itemId: Int): Producto? {
         return productosList.value.find { it.id == itemId }
+    }
+
+    suspend fun fetchProductoById(id: Int): Producto? {
+        return try {
+            apiService.getProductoById(id)
+        } catch (e: Exception) {
+            null // Manejo de error si el producto no se encuentra o hay problema de red
+        }
     }
 
 
