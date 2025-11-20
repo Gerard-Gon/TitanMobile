@@ -1,4 +1,4 @@
-package com.example.titancake.ui.screens
+package com.example.titancake.ui.screens.admin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,7 +28,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 // Esta pantalla muestra el carrito de compras del usuario.
-fun ShoppingCartScreen(
+fun ShoppingCartScreenAdmin(
     cartViewModel: CartViewModel, // ViewModel que maneja la lógica del carrito.
     onConfirm: () -> Unit
 // Acción que se ejecuta al tocar el botón de retroceso.

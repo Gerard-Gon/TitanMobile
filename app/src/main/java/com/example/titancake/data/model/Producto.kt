@@ -1,10 +1,19 @@
 package com.example.titancake.data.model
 
-data class Producto (
+data class Producto(
     val id: Int,
-    val nombre: String,
-    val descripcion: String,
-    val precio: Double,
-    val productImg: String
+    val nombreProducto: String,
+    val precio: Int,
+    val descripcionProducto: String,
+    val stock: Int,
+    val imageUrl: String
 )
+
+//data class Producto (
+//    val id: Int,
+//    val nombre: String,
+//    val descripcion: String,
+//    val precio: Double,
+//    val productImg: String
+//)
 

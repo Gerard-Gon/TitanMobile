@@ -1,5 +1,6 @@
 package com.example.titancake.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -35,9 +36,9 @@ fun BoletaScreen(cartViewModel: CartViewModel,onTimeout: () -> Unit) {
     val impuesto = totalCompra * 0.19
     val totalFinal = totalCompra + impuesto
 
-    // Usamos LaunchedEffect para esperar 2 segundos y luego ejecutar la acción de salida
+    // Usamos LaunchedEffect para esperar 3 segundos y luego ejecutar la acción de salida
     LaunchedEffect(true) {
-        delay(5000)
+        delay(3000)
         onTimeout()
         cartViewModel.vaciarCarrito()
     }
@@ -61,7 +62,7 @@ fun BoletaScreen(cartViewModel: CartViewModel,onTimeout: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = item.producto.nombre, style = MaterialTheme.typography.bodyLarge)
+                Text(text = item.producto.nombreProducto, style = MaterialTheme.typography.bodyLarge)
                 Text(text = "$ ${item.producto.precio * item.cantidad}", style = MaterialTheme.typography.bodyLarge)
             }
         }

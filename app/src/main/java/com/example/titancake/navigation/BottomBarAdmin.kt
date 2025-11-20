@@ -14,22 +14,15 @@ import androidx.navigation.compose.*
 
 // Esta clase representa cada ítem del menú inferior (bottom navigation bar).
 sealed class BottomNavItemAdmin(val route: String, val label: String, val icon: ImageVector) {
-
-    // Sección principal donde se muestran los productos o recetas.
-    object Home : BottomNavItem(Routes.HOME, "Inicio", Icons.Default.Home)
-
-    // Sección donde el usuario puede ver su perfil.
-    object Profile : BottomNavItem(Routes.PROFILE, "Perfil", Icons.Default.Person)
-
-    //  Sección donde se muestran los productos que el usuario quiere comprar.
-    object ShoppingCart : BottomNavItem(Routes.SHOPPINGCART, "Carrito", Icons.Default.ShoppingCart)
-
-    object AdministrarProducto : BottomNavItem(Routes.ADMIN, "Admin", Icons.Default.Add)
+    object Home : BottomNavItemAdmin(Routes.HOMEADMIN, "Inicio", Icons.Default.Home)
+    object Profile : BottomNavItemAdmin(Routes.PROFILEADMIN, "Perfil", Icons.Default.Person)
+    object ShoppingCart : BottomNavItemAdmin(Routes.SHOPPINGCARTADMIN, "Carrito", Icons.Default.ShoppingCart)
+    object AdministrarProducto : BottomNavItemAdmin(Routes.ADMIN, "Admin", Icons.Default.Add)
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 // Esta función dibuja la barra de navegación inferior (BottomBar).
-fun BottomBarAdmin(navController: NavHostController, items: List<BottomNavItem>) {
+fun BottomBarAdmin(navController: NavHostController, items: List<BottomNavItemAdmin>) {
     // Obtenemos la ruta actual para saber qué ítem está seleccionado.
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route

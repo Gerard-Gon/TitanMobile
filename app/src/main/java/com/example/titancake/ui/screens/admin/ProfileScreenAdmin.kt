@@ -1,4 +1,4 @@
-package com.example.titancake.ui.screens
+package com.example.titancake.ui.screens.admin
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -72,7 +72,7 @@ suspend fun uploadImage(file: File): String? {
 
 @Composable
 // Esta pantalla muestra el perfil del usuario en TitanCake.
-fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostController) {
+fun ProfileScreenAdmin(authViewModel: AuthViewModel, navControllerApp: NavHostController) {
     // Observamos el estado de autenticación (por si el usuario cierra sesión).
     val authState by authViewModel.authState.collectAsState()
     val context = LocalContext.current
@@ -160,7 +160,7 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
     ) {
         // Título de la pantalla.
         Text(
-            text = "Perfil de Usuario",
+            text = "Perfil de Admin",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = BrownP

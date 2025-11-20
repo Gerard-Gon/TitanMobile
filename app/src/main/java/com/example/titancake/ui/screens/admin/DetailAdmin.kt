@@ -1,4 +1,4 @@
-package com.example.titancake.ui.screens
+package com.example.titancake.ui.screens.admin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,14 +20,14 @@ import com.example.titancake.ui.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 // Esta pantalla muestra los detalles de un producto específico.
-fun DetailScreen(itemId: Int, viewModel: MainViewModel, onBack: () -> Unit) {
+fun DetailScreenAdmin(itemId: Int, viewModel: MainViewModel, onBack: () -> Unit) {
     val item = viewModel.getProducto(itemId) // Buscamos el producto usando su ID.
 
     // Usamos Scaffold para estructurar la pantalla con una barra superior.
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detalle", style = MaterialTheme.typography.titleLarge) }, // Título que aparece en la parte superior.
+                title = { Text("Detalle Admin", style = MaterialTheme.typography.titleLarge) }, // Título que aparece en la parte superior.
                 navigationIcon = {
                     // Botón de retroceso para volver a la pantalla anterior.
                     IconButton(onClick = onBack) {
@@ -69,6 +69,15 @@ fun DetailScreen(itemId: Int, viewModel: MainViewModel, onBack: () -> Unit) {
                 Spacer(Modifier.height(8.dp))
                 // Mostramos el precio del producto.
                 Text("Precio: \$${item.precio}", style = MaterialTheme.typography.bodyMedium, fontSize = 20.sp)
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+
+                }
 
             } else {
                 // Si no encontramos el producto, mostramos un mensaje de error.

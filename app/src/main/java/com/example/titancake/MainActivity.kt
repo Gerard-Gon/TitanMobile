@@ -43,7 +43,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat // Necesario para edge-to-edge
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.titancake.ui.screens.PostScreen
+import com.example.titancake.ui.screens.admin.PostScreen
 import com.example.titancake.ui.theme.TitanCakeTheme
 import com.example.titancake.ui.viewmodel.PostViewModel
 

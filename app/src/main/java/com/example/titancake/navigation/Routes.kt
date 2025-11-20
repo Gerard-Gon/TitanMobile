@@ -1,19 +1,20 @@
 package com.example.titancake.navigation
 
 object Routes {
-
     const val HOME = "home"
+    const val HOMEADMIN = "homeAdmin"
     const val PROFILE = "profile"
+    const val PROFILEADMIN = "profileAdmin"
+    const val SHOPPINGCART = "shoppingcart"
+    const val SHOPPINGCARTADMIN = "shoppingcartAdmin"
+    const val ADMIN = "admin"
     const val DETAIL = "detail/{itemId}"
 
-    const val REGISTER = "register"
+    const val DETAILADMIN = "detailAdmin/{itemId}"
 
-    const val SHOPPINGCART = "shoppingCart"
+    fun detailRoute(id: Int) = "detail/$id"
 
-    const val ADMIN = "Admin"
-
-    const val SPLASH = "splashScreen"
-    fun detailRoute(itemId: Int) = "detail/$itemId"
+    fun detailAdminRoute(id: Int) = "detailAdmin/$id"
 
 }
 

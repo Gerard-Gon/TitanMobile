@@ -1,5 +1,8 @@
 package com.example.titancake.ui.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.titancake.data.repository.AuthRepository
@@ -22,6 +25,8 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
     // Estado interno de autenticación que puede ser observado desde la UI.
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
+
+    var isAdmin by mutableStateOf(false)
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
     private val _currentUid = MutableStateFlow<String?>(null)
@@ -41,7 +46,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
             val result = repository.login(email, password)
-            // Interpretamos el resultado: éxito o error.
             _authState.value = result.fold(
                 onSuccess = { AuthState.Success(it) },
                 onFailure = {
@@ -50,11 +54,9 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                         "ERROR_INVALID_EMAIL" -> "El correo es inválido o está mal escrito"
                         else -> "La contraseña o el correo es incorrecto"
                     }
-                    println("Login error: $messageAux2")
                     AuthState.Error(messageAux2)
                 }
             )
-
         }
     }
 

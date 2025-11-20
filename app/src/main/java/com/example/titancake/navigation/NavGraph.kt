@@ -15,11 +15,14 @@ import com.example.titancake.ui.screens.BoletaScreen
 import com.example.titancake.ui.screens.DetailScreen
 import com.example.titancake.ui.screens.HomeScreen
 import com.example.titancake.ui.screens.LoginScreen
-import com.example.titancake.ui.screens.PostScreen
 import com.example.titancake.ui.screens.ProfileScreen
 import com.example.titancake.ui.screens.RegisterScreen
 import com.example.titancake.ui.screens.ShoppingCartScreen
 import com.example.titancake.ui.screens.SplashScreen
+import com.example.titancake.ui.screens.admin.DetailScreenAdmin
+import com.example.titancake.ui.screens.admin.HomeScreenAdmin
+import com.example.titancake.ui.screens.admin.ProfileScreenAdmin
+import com.example.titancake.ui.screens.admin.ShoppingCartScreenAdmin
 import com.example.titancake.ui.viewmodel.AuthViewModel
 import com.example.titancake.ui.viewmodel.CartViewModel
 import com.example.titancake.ui.viewmodel.MainViewModel
@@ -33,17 +36,29 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
     val cartViewModel: CartViewModel = viewModel()
     // Definimos los ítems que aparecerán en la barra inferior de navegación.
     val bottomItems = listOf(BottomNavItem.Home, BottomNavItem.ShoppingCart,BottomNavItem.Profile)
+    val bottomItemsAdmin = listOf(
+        BottomNavItemAdmin.Home,
+        BottomNavItemAdmin.Profile,
+        BottomNavItemAdmin.ShoppingCart,
+        BottomNavItemAdmin.AdministrarProducto
+    )
     // Estas son las rutas donde queremos que se muestre la barra inferior.
     val showBottomBarRoutes = listOf(Routes.HOME, Routes.PROFILE, Routes.SHOPPINGCART)
+    val showBottomBarAdminRoutes = listOf(Routes.HOMEADMIN, Routes.PROFILEADMIN, Routes.SHOPPINGCARTADMIN, Routes.ADMIN)
     // Obtenemos la ruta actual para saber si debemos mostrar la barra inferior.
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
     val showBottomBar = currentRoute in showBottomBarRoutes
+    val showBottomBarAdmin = currentRoute in showBottomBarAdminRoutes
 
     // Usamos Scaffold para estructurar la pantalla y agregar la barra inferior si corresponde.
     Scaffold(
         bottomBar = {
-            if (showBottomBar) BottomBar(navController = navController, items = bottomItems)
+            when {
+                showBottomBarAdmin -> BottomBarAdmin(navController = navController, items = bottomItemsAdmin)
+                showBottomBar -> BottomBar(navController = navController, items = bottomItems)
+            }
+
         }
     ) { innerPadding ->
 
@@ -56,10 +71,21 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
         // Pantalla de presentacion (Splash)
         composable("splash") {
             SplashScreen {
-                // después de mostrar el splash, decidimos a donde ir:
-                // Si el usuaario esta logueado, lo llevamos al "home" si no a la pantalla de "login"
-                if (isLoggedIn) navController.navigate("home") { popUpTo("splash") { inclusive = true } }
-                else navController.navigate("login") { popUpTo("splash") { inclusive = true } }
+                if (isLoggedIn) {
+                    if (authViewModel.isAdmin) {
+                        navController.navigate("homeAdmin") {
+                            popUpTo("splash") { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate("home") {
+                            popUpTo("splash") { inclusive = true }
+                        }
+                    }
+                } else {
+                    navController.navigate("login") {
+                        popUpTo("splash") { inclusive = true }
+                    }
+                }
             }
         }
 
@@ -68,8 +94,13 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             LoginScreen(
                 onLogin = { email, pass -> authViewModel.login(email, pass) },
                 onNavigateToRegister = { navController.navigate("register") },
-                onSuccess = {
+                onSuccessCliente = {
                     navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                onSuccessAdmin = {
+                    navController.navigate("homeAdmin") {
                         popUpTo("login") { inclusive = true }
                     }
                 },
@@ -101,6 +132,35 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             }, onClick = {
 
             }, navController = navController)
+        }
+
+        composable(Routes.HOMEADMIN) {
+            val vm: MainViewModel = viewModel()
+            HomeScreenAdmin(viewModel = vm, cartViewModel = cartViewModel,onItemClick = { id -> // Si el usuario toca un producto, lo llevamos a la pantalla de detalle.
+                navController.navigate(Routes.detailAdminRoute(id))
+            }, onClick = {
+
+            }, navController = navController)
+        }
+
+        composable(Routes.PROFILEADMIN) {
+            ProfileScreenAdmin(authViewModel = authViewModel, navControllerApp = navController)
+        }
+
+        composable(Routes.SHOPPINGCARTADMIN) {
+            ShoppingCartScreenAdmin(
+                cartViewModel = cartViewModel,
+                onConfirm = { navController.navigate("boleta") }
+            )
+        }
+
+        composable(
+            route = Routes.DETAILADMIN,
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val vm: MainViewModel = viewModel()
+            val id = backStackEntry.arguments?.getInt("itemId") ?: -1
+            DetailScreenAdmin(itemId = id, viewModel = vm, onBack = { navController.popBackStack() })
         }
 
         // Pantalla de perfil del usuario.
@@ -144,10 +204,6 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             DetailScreen(itemId = id, viewModel = vm, onBack = { navController.popBackStack() })
         }
 
-        composable("get") {
-            val viewModel: MainViewModel = viewModel()
-            PostScreen(viewModel = viewModel)
-        }
 
     }
 }

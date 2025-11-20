@@ -15,9 +15,34 @@ class MainViewModel(
 ) : ViewModel() {
 
     // Estado interno que guarda la lista de productos disponibles.
-    private val _productos = MutableStateFlow<List<Producto>>(emptyList())
+    protected val _productos = MutableStateFlow<List<Producto>>(emptyList())
+
+    open val productosList: StateFlow<List<Producto>> = _productos
+
+
+    // Función para obtener un producto específico por su ID.
+
+    fun fetchProductos() {
+        viewModelScope.launch {
+            try {
+                val result = repo.getProductos()
+                println("Productos recibidos: ${result.size}")
+                _productos.value = result
+            } catch (e: Exception) {
+                println("Error al obtener los datos: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    fun getProducto(itemId: Int): Producto? {
+        return productosList.value.find { it.id == itemId }
+    }
+
+
 
     // Exponemos los productos como un flujo de solo lectura para que la UI pueda observarlos.
+
+    /*
     val productos: StateFlow<List<Producto>> = _productos.asStateFlow()
 
     init {
@@ -27,31 +52,10 @@ class MainViewModel(
         }
     }
 
-    // Función para obtener un producto específico por su ID.
     fun getProducto(id: Int): Producto? = repo.getById(id)
 
+     */
 
-    // ULTIMO AÑADIDO *******
 
-    private val _productoList = MutableStateFlow<List<Producto>>(emptyList())
-
-    // Flujo público de solo lectura
-    val productoList: StateFlow<List<Producto>> = _productoList
-
-    // Se llama automáticamente al iniciar
-    init {
-        fetchProductos()
-    }
-
-    // Función que obtiene los datos en segundo plano
-    private fun fetchProductos() {
-        viewModelScope.launch {
-            try {
-                _productoList.value = repo.getProductos()
-            } catch (e: Exception) {
-                println("Error al obtener datos: ${e.localizedMessage}")
-            }
-        }
-    }
 }
 

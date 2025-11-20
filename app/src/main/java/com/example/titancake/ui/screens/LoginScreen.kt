@@ -36,48 +36,34 @@ import com.example.titancake.ui.viewmodel.AuthViewModel
 @Composable
 // Esta pantalla permite al usuario iniciar sesión en TitanCake.
 fun LoginScreen(
-    onLogin: (String, String) -> Unit, // Función que se ejecuta cuando el usuario toca "Ingresar".
-    onNavigateToRegister: () -> Unit,  // Función que se ejecuta cuando el usuario quiere registrarse.
-    onSuccess: () -> Unit,  // Función que se ejecuta cuando el inicio de sesión fue exitoso.
-    authViewModel: AuthViewModel,   // ViewModel que maneja el estado de autenticación.
+    onLogin: (String, String) -> Unit,
+    onNavigateToRegister: () -> Unit,
+    onSuccessCliente: () -> Unit,
+    onSuccessAdmin: () -> Unit,
+    authViewModel: AuthViewModel,
 ) {
-    // Variables para guardar lo que el usuario escribe.
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    // Variable para mostrar errores locales (como contraseña vacía).
     var localError by remember { mutableStateOf<String?>(null) }
+    var adminLogin by remember { mutableStateOf(false) }
 
-    // Observamos el estado de autenticación (cargando, éxito, error).
     val authState by authViewModel.authState.collectAsState()
 
-    // Si hay un error de autenticación, lo mostramos en pantalla.
-    if (authState is AuthState.Error) {
-        val errorMessage = (authState as AuthState.Error).message
-        Text(
-            text = errorMessage,
-            color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-    }
-
-
-    // Si el estado cambia a éxito, ejecutamos la función de éxito
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
-            onSuccess()
+            if (adminLogin) onSuccessAdmin() else onSuccessCliente()
         }
     }
 
-    // Estructura principal de la pantalla.
     Scaffold { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize().background(BeigeP)
+                .fillMaxSize()
+                .background(BeigeP)
                 .padding(padding)
         ) {
-            // Título de la pantalla.
             Text(
-                text = "Inicio sesion",
+                text = "Inicio sesión",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = BrownP,
@@ -87,26 +73,40 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            // Campo para escribir el correo.
             TextFieldModificado(email, { email = it }, false, "Correo")
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Campo para escribir la contraseña.
             TextFieldModificado(password, { password = it }, true, "Contraseña")
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón para iniciar sesión.
-            ButtonModificado("Ingresar", { if (password == "")  {
-                localError = "La contraseña no puede estar vacia" // Validamos que la contraseña no esté vacía.
+            ButtonModificado(
+                text = "Ingresar como cliente",
+                onClick = {
+                    if (password.isBlank()) {
+                        localError = "La contraseña no puede estar vacía"
+                    } else {
+                        localError = null
+                        adminLogin = false
+                        authViewModel.isAdmin = false
+                        onLogin(email, password)
+                    }
+                }
+            )
 
-            } else {
-                // Si hay un error local, lo mostramos.
-                localError = null
-                onLogin(email, password)
-            }
+            Spacer(modifier = Modifier.height(16.dp))
 
-
-            })
+            ButtonModificado(
+                text = "Ingresar como Administrador",
+                onClick = {
+                    if (password.isBlank()) {
+                        localError = "La contraseña no puede estar vacía"
+                    } else {
+                        localError = null
+                        adminLogin = true
+                        authViewModel.isAdmin = true
+                        onLogin(email, password)
+                    }
+                }
+            )
 
             localError?.let {
                 Text(
@@ -116,9 +116,8 @@ fun LoginScreen(
                 )
             }
 
-
             Spacer(modifier = Modifier.height(16.dp))
-            // Mostramos un indicador de carga o error según el estado de autenticación.
+
             when (authState) {
                 is AuthState.Loading -> CircularProgressIndicator()
                 is AuthState.Error -> Text(
@@ -130,13 +129,13 @@ fun LoginScreen(
             }
 
             Spacer(modifier = Modifier.weight(1f))
-            // Texto para navegar al registro si el usuario no tiene cuenta.
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Registrate",
+                    text = "Regístrate",
                     color = Black,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
