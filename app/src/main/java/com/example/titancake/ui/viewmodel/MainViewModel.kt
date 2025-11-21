@@ -6,6 +6,7 @@ import com.example.titancake.data.model.Producto
 import com.example.titancake.data.model.ProductoRequest
 import com.example.titancake.data.remote.RetrofitInstance
 import com.example.titancake.data.repository.ProductoRepository
+import com.example.titancake.data.repository.ProductoRepositoryInterface
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 
 // ViewModel principal que maneja la lógica de productos en TitanCake.
 class MainViewModel(
-    private val repo: ProductoRepository = ProductoRepository()
+    private val repo: ProductoRepositoryInterface = ProductoRepository()
 ) : ViewModel() {
 
     // Estado interno que guarda la lista de productos disponibles.
@@ -23,6 +24,10 @@ class MainViewModel(
     protected val _productos = MutableStateFlow<List<Producto>>(emptyList())
 
     open val productosList: StateFlow<List<Producto>> = _productos
+
+    init {
+        fetchProductos()
+    }
 
 
     // Función para obtener un producto específico por su ID.
