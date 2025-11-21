@@ -19,6 +19,7 @@ import com.example.titancake.ui.screens.ProfileScreen
 import com.example.titancake.ui.screens.RegisterScreen
 import com.example.titancake.ui.screens.ShoppingCartScreen
 import com.example.titancake.ui.screens.SplashScreen
+import com.example.titancake.ui.screens.admin.AdminScreen
 import com.example.titancake.ui.screens.admin.DetailScreenAdmin
 import com.example.titancake.ui.screens.admin.HomeScreenAdmin
 import com.example.titancake.ui.screens.admin.ProfileScreenAdmin
@@ -153,6 +154,16 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
                 onConfirm = { navController.navigate("boleta") }
             )
         }
+
+        composable(Routes.ADMIN) {
+            val mainViewModel: MainViewModel = viewModel()
+            AdminScreen(
+                authViewModel = authViewModel,
+                navControllerApp = navController,
+                viewModel = mainViewModel
+            )
+        }
+
 
         composable(
             route = Routes.DETAILADMIN,

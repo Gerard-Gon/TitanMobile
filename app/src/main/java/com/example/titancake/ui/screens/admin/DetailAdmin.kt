@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.titancake.data.model.Producto
+import com.example.titancake.ui.components.TextFieldModificado
 import com.example.titancake.ui.theme.BeigeP
+import com.example.titancake.ui.theme.BrownP
+import com.example.titancake.ui.theme.Red
 import com.example.titancake.ui.viewmodel.MainViewModel
 
 
@@ -30,9 +33,26 @@ import com.example.titancake.ui.viewmodel.MainViewModel
 fun DetailScreenAdmin(itemId: Int, viewModel: MainViewModel, onBack: () -> Unit) {
     var producto by remember { mutableStateOf<Producto?>(null) }
 
+    // Estados editables
+    var nombreProducto by remember { mutableStateOf("") }
+    var precio by remember { mutableStateOf("") }
+    var descripcionProducto by remember { mutableStateOf("") }
+    var stock by remember { mutableStateOf("") }
+    var imageUrl by remember { mutableStateOf("") }
+
+
     LaunchedEffect(itemId) {
-        producto = viewModel.fetchProductoById(itemId)
+        val p = viewModel.fetchProductoById(itemId)
+        producto = p
+        p?.let {
+            nombreProducto = it.nombreProducto
+            precio = it.precio.toString()
+            descripcionProducto = it.descripcionProducto
+            stock = it.stock.toString()
+            imageUrl = it.imageUrl
+        }
     }
+
 
     Scaffold(
         topBar = {
@@ -53,7 +73,7 @@ fun DetailScreenAdmin(itemId: Int, viewModel: MainViewModel, onBack: () -> Unit)
                 .padding(padding)
                 .fillMaxSize()
                 .padding(16.dp)
-                .background(BeigeP)
+                .background(BeigeP),
         ) {
             if (producto != null) {
                 AsyncImage(
@@ -66,18 +86,73 @@ fun DetailScreenAdmin(itemId: Int, viewModel: MainViewModel, onBack: () -> Unit)
                     contentScale = ContentScale.Crop
                 )
 
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-                Text(producto!!.nombreProducto, style = MaterialTheme.typography.titleMedium, fontSize = 24.sp)
-                Spacer(Modifier.height(8.dp))
-                Text(producto!!.descripcionProducto, style = MaterialTheme.typography.bodyMedium, fontSize = 18.sp)
-                Spacer(Modifier.height(8.dp))
-                Text("Precio: \$${producto!!.precio}", style = MaterialTheme.typography.bodyMedium, fontSize = 20.sp)
+                // Campos editables
+                TextFieldModificado(newValue = nombreProducto, onChange = { nombreProducto = it }, isPassword = false, label = "Nombre")
+                Spacer(modifier = Modifier.height(10.dp))
+                TextFieldModificado(newValue = precio, onChange = { precio = it }, isPassword = false, label = "Precio")
+                Spacer(modifier = Modifier.height(10.dp))
+                TextFieldModificado(newValue = descripcionProducto, onChange = { descripcionProducto = it }, isPassword = false, label = "Descripción")
+                Spacer(modifier = Modifier.height(10.dp))
+                TextFieldModificado(newValue = stock, onChange = { stock = it }, isPassword = false, label = "Stock")
+                Spacer(modifier = Modifier.height(10.dp))
+                TextFieldModificado(newValue = imageUrl, onChange = { imageUrl = it }, isPassword = false, label = "Imagen URL")
+                Spacer(modifier = Modifier.height(30.dp))
 
-                Spacer(modifier = Modifier.height(32.dp))
+
             } else {
                 Text("Cargando producto...", style = MaterialTheme.typography.bodyLarge)
             }
+
+            Button(
+                onClick = {
+                    producto?.let {
+                        val actualizado = it.copy(
+                            nombreProducto = nombreProducto,
+                            precio = precio.toIntOrNull() ?: 0,
+                            descripcionProducto = descripcionProducto,
+                            stock = stock.toIntOrNull() ?: 0,
+                            imageUrl = imageUrl
+                        )
+                        viewModel.updateProducto(it.id, actualizado) { success ->
+                            if (success) {
+                                println("Producto actualizado correctamente")
+                                onBack()
+                            } else {
+                                println("Error al actualizar producto")
+                            }
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = BrownP),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Modificar Producto", color = BeigeP)
+            }
+
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Button(
+                onClick = {
+                    producto?.let {
+                        viewModel.deleteProducto(it.id) { success ->
+                            if (success) {
+                                // Vuelve atrás si se borró correctamente
+                                onBack()
+                            } else {
+                                println("Error al eliminar producto")
+                            }
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Red),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Eliminar Producto", color = BeigeP)
+            }
+
         }
     }
 }

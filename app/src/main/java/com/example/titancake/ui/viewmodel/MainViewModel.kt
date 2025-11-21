@@ -3,6 +3,7 @@ package com.example.titancake.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.titancake.data.model.Producto
+import com.example.titancake.data.model.ProductoRequest
 import com.example.titancake.data.remote.RetrofitInstance
 import com.example.titancake.data.repository.ProductoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +50,71 @@ class MainViewModel(
             null // Manejo de error si el producto no se encuentra o hay problema de red
         }
     }
+
+    fun deleteProducto(id: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = repo.deleteProducto(id)
+                if (response.isSuccessful) {
+                    // Actualiza la lista local quitando el producto
+                    _productos.value = _productos.value.filter { it.id != id }
+                    onResult(true)
+                } else {
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                onResult(false)
+            }
+        }
+    }
+
+    fun addProducto(producto: ProductoRequest, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = repo.addProducto(producto)
+                if (response.isSuccessful) {
+                    response.body()?.let { nuevo ->
+                        // aquí ya tienes el id generado por la API
+                        _productos.value = _productos.value + nuevo
+                        println("Producto agregado con id: ${nuevo.id}")
+                    }
+                    onResult(true)
+                } else {
+                    println("Error: ${response.code()} - ${response.errorBody()?.string()}")
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                println("Excepción: ${e.localizedMessage}")
+                onResult(false)
+            }
+        }
+    }
+
+    fun updateProducto(id: Int, producto: Producto, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = repo.updateProducto(id, producto)
+                if (response.isSuccessful) {
+                    response.body()?.let { actualizado ->
+                        // Reemplaza el producto en la lista
+                        _productos.value = _productos.value.map {
+                            if (it.id == id) actualizado else it
+                        }
+                    }
+                    onResult(true)
+                } else {
+                    println("Error: ${response.code()} - ${response.errorBody()?.string()}")
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                println("Excepción: ${e.localizedMessage}")
+                onResult(false)
+            }
+        }
+    }
+
+
+
 
 
 

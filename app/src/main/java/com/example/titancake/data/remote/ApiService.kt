@@ -1,10 +1,12 @@
 package com.example.titancake.data.remote
 
 import com.example.titancake.data.model.Producto
+import com.example.titancake.data.model.ProductoRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
@@ -28,6 +30,13 @@ interface ApiService {
     suspend fun deleteProducto(
         @Path("id") id: Int
     ): Response<Unit>
+
+    @POST("api/v1/productos")
+    suspend fun addProducto(
+        @Body producto: ProductoRequest
+    ): Response<Producto>
+
+
 
 
 }
