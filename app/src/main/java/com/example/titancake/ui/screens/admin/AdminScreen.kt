@@ -2,24 +2,16 @@ package com.example.titancake.ui.screens.admin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import com.example.titancake.data.model.CategoriaRequest
 import com.example.titancake.data.model.Producto
 import com.example.titancake.data.model.ProductoRequest
 import com.example.titancake.ui.components.TextFieldModificado
@@ -42,6 +34,9 @@ fun AdminScreen(authViewModel: AuthViewModel,  navControllerApp: NavHostControll
     var stock by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
 
+    // 1. NUEVO ESTADO para el ID de la Categoría
+    var categoriaIdInput by remember { mutableStateOf("") }
+    // La constante CATEGORIA_ID_POR_DEFECTO ya no es necesaria aquí.
 
 
     Scaffold(
@@ -60,7 +55,7 @@ fun AdminScreen(authViewModel: AuthViewModel,  navControllerApp: NavHostControll
                 .padding(16.dp)
                 .background(BeigeP)
         ) {
-            // Campos de texto usando tu TextFieldModificado
+            // Campos de texto existentes
             TextFieldModificado(newValue = nombreProducto, onChange = { nombreProducto = it }, isPassword = false, label = "Nombre del producto")
             Spacer(modifier = Modifier.height(10.dp))
             TextFieldModificado(newValue = precio, onChange = { precio = it }, isPassword = false, label = "Precio")
@@ -71,23 +66,40 @@ fun AdminScreen(authViewModel: AuthViewModel,  navControllerApp: NavHostControll
             Spacer(modifier = Modifier.height(10.dp))
             TextFieldModificado(newValue = imageUrl, onChange = { imageUrl = it }, isPassword = false, label = "URL de imagen")
 
+            // 2. NUEVO CAMPO DE ENTRADA PARA CATEGORÍA
+            Spacer(modifier = Modifier.height(10.dp))
+            TextFieldModificado(
+                newValue = categoriaIdInput,
+                onChange = { categoriaIdInput = it },
+                isPassword = false,
+                label = "ID de Categoría (Obligatorio)" // Se indica al usuario qué ingresar
+            )
+
             Spacer(modifier = Modifier.height(20.dp))
 
 
             Button(
                 onClick = {
-                    val nuevoProducto = ProductoRequest(
-                        nombreProducto = nombreProducto,
-                        precio = precio.toIntOrNull() ?: 0,
-                        descripcionProducto = descripcionProducto,
-                        stock = stock.toIntOrNull() ?: 0,
-                        imageUrl = imageUrl
-                    )
-
-                    viewModel.addProducto(nuevoProducto) { success ->
-                        if (success) {
-                            navControllerApp.popBackStack()
+                    val categoriaId = categoriaIdInput.toIntOrNull()
+                    if (categoriaId != null && categoriaId > 0) {
+                        val categoriaRequest = CategoriaRequest(id = categoriaId)
+                        val nuevoProducto = ProductoRequest(
+                            nombreProducto = nombreProducto,
+                            precio = precio.toIntOrNull() ?: 0,
+                            descripcionProducto = descripcionProducto,
+                            stock = stock.toIntOrNull() ?: 0,
+                            imageUrl = imageUrl,
+                            categoria = categoriaRequest // Usa el ID ingresado
+                        )
+                        viewModel.addProducto(nuevoProducto) { success ->
+                            if (success) {
+                                // Éxito: Volver atrás
+                                navControllerApp.popBackStack()
+                            }
                         }
+                    } else {
+                        // Opcional: Mostrar un mensaje al usuario si el ID de Categoría es inválido.
+                        println("Error: El ID de Categoría debe ser un número válido.")
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = BrownP),

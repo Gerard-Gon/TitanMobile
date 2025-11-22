@@ -5,5 +5,6 @@ data class ProductoRequest(
     val precio: Int,
     val descripcionProducto: String,
     val stock: Int,
-    val imageUrl: String
+    val imageUrl: String,
+    val categoria: CategoriaRequest
 )

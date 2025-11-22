@@ -6,7 +6,8 @@ data class Producto(
     val precio: Int,
     val descripcionProducto: String,
     val stock: Int,
-    val imageUrl: String
+    val imageUrl: String,
+    val categoria: Categoria
 )
 
 //data class Producto (
