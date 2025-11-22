@@ -8,6 +8,9 @@ import retrofit2.Response
 
 interface ProductoRepositoryInterface {
     suspend fun getProductos(): List<Producto>
+    suspend fun addProducto(producto: ProductoRequest): Response<Producto>
+    suspend fun deleteProducto(id: Int): Response<Unit>
+    suspend fun updateProducto(id: Int, producto: Producto): Response<Producto>
 }
 
 class ProductoRepository : ProductoRepositoryInterface{
@@ -25,15 +28,15 @@ class ProductoRepository : ProductoRepositoryInterface{
         return RetrofitInstance.api.getProductos()
     }
 
-    suspend fun addProducto(producto: ProductoRequest): Response<Producto> {
+    override suspend fun addProducto(producto: ProductoRequest): Response<Producto> {
         return RetrofitInstance.api.addProducto(producto)
     }
 
-    suspend fun deleteProducto(id: Int): Response<Unit> {
+    override suspend fun deleteProducto(id: Int): Response<Unit> {
         return RetrofitInstance.api.deleteProducto(id)
     }
 
-    suspend fun updateProducto(id: Int, producto: Producto): Response<Producto> {
+    override suspend fun updateProducto(id: Int, producto: Producto): Response<Producto> {
         return RetrofitInstance.api.updateProducto(id, producto)
     }
 
