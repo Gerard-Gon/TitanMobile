@@ -21,7 +21,6 @@ class HomeScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    // Repositorio falso para pruebas
     private val fakeRepository = object : ProductoRepositoryInterface {
         override suspend fun getProductos(): List<Producto> = listOf(
             Producto(1, "Pastel de Chocolate", 5000, "Delicioso pastel con cobertura", 10, "", Categoria(1, "Pastel")),
@@ -59,7 +58,6 @@ class HomeScreenTest {
             )
         }
 
-        // Verifica que el título principal esté visible
         composeTestRule.onNodeWithText("TITANCAKE MOBILE").assertIsDisplayed()
     }
 
@@ -75,11 +73,9 @@ class HomeScreenTest {
             )
         }
 
-        // Verifica que los nombres de los productos estén visibles
         composeTestRule.onNodeWithText("Pastel de Chocolate").assertIsDisplayed()
         composeTestRule.onNodeWithText("Tarta de Frutilla").assertIsDisplayed()
 
-        // Verifica que al menos un botón "Agregar al carrito" esté visible
         composeTestRule.onAllNodesWithText("Agregar al carrito")[0].assertIsDisplayed()
     }
 }
