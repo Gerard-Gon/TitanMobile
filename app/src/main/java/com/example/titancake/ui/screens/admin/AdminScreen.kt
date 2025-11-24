@@ -268,7 +268,7 @@ fun AdminScreen(authViewModel: AuthViewModel,  navControllerApp: NavHostControll
                         println("Error: El ID de Categoría debe ser válido.")
                     }
                 },
-                // Deshabilitamos el botón si se está subiendo la imagen para evitar errores
+
                 enabled = !isUploading,
                 colors = ButtonDefaults.buttonColors(containerColor = BrownP),
                 modifier = Modifier.fillMaxWidth()
