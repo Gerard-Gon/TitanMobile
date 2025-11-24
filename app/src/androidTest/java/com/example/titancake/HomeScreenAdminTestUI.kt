@@ -12,6 +12,7 @@ import com.example.titancake.data.model.Producto
 import com.example.titancake.data.model.ProductoRequest
 import org.junit.Rule
 import androidx.navigation.compose.rememberNavController
+import com.example.titancake.data.model.Categoria
 import org.junit.Test
 import retrofit2.Response
 
@@ -23,12 +24,22 @@ class HomeScreenAdminTest {
     // Repositorio falso para pruebas
     private val fakeRepository = object : ProductoRepositoryInterface {
         override suspend fun getProductos(): List<Producto> = listOf(
-            Producto(1, "Pastel de Chocolate", 5000, "Delicioso pastel con cobertura", 10, ""),
-            Producto(2, "Tarta de Frutilla", 4500, "Tarta fresca con frutillas naturales", 8, "")
+            Producto(1, "Pastel de Chocolate", 5000, "Delicioso pastel con cobertura", 10, "", Categoria(1, "Pastel")),
+            Producto(2, "Tarta de Frutilla", 4500, "Tarta fresca con frutillas naturales", 8, "", Categoria(2, "Dulce"))
         )
 
         override suspend fun addProducto(producto: ProductoRequest): Response<Producto> =
-            Response.success(Producto(3, producto.nombreProducto, producto.precio, producto.descripcionProducto, producto.stock, producto.imageUrl))
+            Response.success(
+                Producto(
+                    3,
+                    producto.nombreProducto,
+                    producto.precio,
+                    producto.descripcionProducto,
+                    producto.stock,
+                    producto.imageUrl,
+                    Categoria(producto.categoria.id, "Categoría Test")
+                )
+            )
 
         override suspend fun deleteProducto(id: Int): Response<Unit> = Response.success(Unit)
 
