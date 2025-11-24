@@ -18,7 +18,7 @@ object RetrofitInstance {
 
     val apiFiles: UploadApi by lazy {
         Retrofit.Builder()
-            .baseUrl("https://tmpfiles.org/") // 👈 Base URL
+            .baseUrl("https://tmpfiles.org/") // Base URL
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(UploadApi::class.java)

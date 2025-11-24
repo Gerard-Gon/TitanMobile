@@ -16,5 +16,6 @@ object Routes {
 
     fun detailAdminRoute(id: Int) = "detailAdmin/$id"
 
+
 }
 
