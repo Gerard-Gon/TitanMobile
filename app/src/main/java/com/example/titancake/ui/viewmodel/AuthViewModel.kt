@@ -12,18 +12,17 @@ import kotlinx.coroutines.launch
 
 // Esta clase representa los distintos estados posibles durante el proceso de autenticación.
 sealed class AuthState {
-    object Idle : AuthState() // Estado inicial, sin actividad.
-    object Loading : AuthState() // Estado mientras se está procesando login o registro.
+    object Idle : AuthState()
+    object Loading : AuthState()
 
-    data class Success(val uid: String) : AuthState()  // Estado cuando el login o registro fue exitoso.
+    data class Success(val uid: String) : AuthState()
 
-    data class Error(val message: String) : AuthState() // Estado cuando ocurrió un error, con mensaje incluido.
+    data class Error(val message: String) : AuthState()
 }
 
 // ViewModel que maneja toda la lógica de autenticación en TitanCake.
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
-    // Estado interno de autenticación que puede ser observado desde la UI.
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
 
     var isAdmin by mutableStateOf(false)
@@ -33,7 +32,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     val currentUid: StateFlow<String?> = _currentUid.asStateFlow()
 
     init {
-        // Escuchar cambios de sesión desde DataStore
         viewModelScope.launch {
             repository.getUidFlow().collect { uid ->
                 _currentUid.value = uid
@@ -41,7 +39,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    // Función para iniciar sesión con correo y contraseña.
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
@@ -60,7 +57,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    // Función para registrar un nuevo usuario.
     fun register(email: String, password: String, name: String, confirmpass: String) {
         viewModelScope.launch {
             // Validamos que las contraseñas coincidan antes de continuar.
@@ -87,7 +83,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    // Función para cerrar sesión.
     fun logout() {
         viewModelScope.launch {
             repository.logout()

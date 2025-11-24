@@ -17,7 +17,6 @@ class MainViewModel(
     private val repo: ProductoRepositoryInterface = ProductoRepository()
 ) : ViewModel() {
 
-    // Estado interno que guarda la lista de productos disponibles.
 
     private val apiService = RetrofitInstance.api
 
@@ -29,8 +28,6 @@ class MainViewModel(
         fetchProductos()
     }
 
-
-    // Función para obtener un producto específico por su ID.
 
     fun fetchProductos() {
         viewModelScope.launch {
@@ -117,27 +114,6 @@ class MainViewModel(
             }
         }
     }
-
-
-
-
-
-
-    // Exponemos los productos como un flujo de solo lectura para que la UI pueda observarlos.
-
-    /*
-    val productos: StateFlow<List<Producto>> = _productos.asStateFlow()
-
-    init {
-        // Al iniciar el ViewModel, lanzamos una corrutina para cargar todos los productos desde el repositorio.
-        viewModelScope.launch {
-            _productos.value = repo.getAll()
-        }
-    }
-
-    fun getProducto(id: Int): Producto? = repo.getById(id)
-
-     */
 
 
 }
