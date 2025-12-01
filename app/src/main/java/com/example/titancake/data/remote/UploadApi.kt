@@ -14,4 +14,5 @@ interface UploadApi {
     suspend fun uploadFile(
         @Part file: MultipartBody.Part
     ): Response<UploadResponse>
+
 }
