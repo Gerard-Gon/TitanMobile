@@ -52,7 +52,10 @@ suspend fun uploadProductImage(file: File): String? {
     val response = RetrofitInstance.apiFiles.uploadFile(multipart)
 
     return if (response.isSuccessful) {
-        response.body()?.data?.url?.replace("http://", "https://")
+        val rawUrl = response.body()?.data?.url
+
+        rawUrl?.replace("http://", "https://")
+            ?.replace("tmpfiles.org/", "tmpfiles.org/dl/")
     } else {
         println("Error: ${response.errorBody()?.string()}")
         null
@@ -82,14 +85,23 @@ fun AdminScreen(authViewModel: AuthViewModel,  navControllerApp: NavHostControll
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
-
+            // Crea el archivo temporal para la subida
             val inputStream: InputStream? = context.contentResolver.openInputStream(it)
             val file = File(context.cacheDir, "product_${System.currentTimeMillis()}.jpg")
             val outputStream = FileOutputStream(file)
             inputStream?.copyTo(outputStream)
+
+            // Decodifica el bitmap para verlo inmediatamente en pantalla
+            // Rebobinael stream o abrimos uno nuevo para decodificar
+            val imageStreamForPreview = context.contentResolver.openInputStream(it)
+            localImageBitmap = android.graphics.BitmapFactory.decodeStream(imageStreamForPreview)
+            imageStreamForPreview?.close()
+
+            // Cerramos los streams de copia
             inputStream?.close()
             outputStream.close()
 
+            // 3. Iniciar la subida
             isUploading = true
             coroutineScope.launch {
                 val url = uploadProductImage(file)
@@ -256,7 +268,7 @@ fun AdminScreen(authViewModel: AuthViewModel,  navControllerApp: NavHostControll
                             precio = precio.toIntOrNull() ?: 0,
                             descripcionProducto = descripcionProducto,
                             stock = stock.toIntOrNull() ?: 0,
-                            imageUrl = imageUrl, // Aquí va la URL que nos devolvió la API al subir la foto
+                            imageUrl = imageUrl,
                             categoria = categoriaRequest
                         )
                         viewModel.addProducto(nuevoProducto) { success ->
