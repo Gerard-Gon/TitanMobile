@@ -2,6 +2,8 @@ package com.example.titancake.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -73,69 +75,88 @@ fun RegisterScreen(
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize().background(BeigeP)
-                .padding(padding),
+                .fillMaxSize()
+                .background(BeigeP)
+                .padding(padding)
+                .verticalScroll(rememberScrollState()), // Permite scroll si el teclado tapa
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
+            // --- CORRECCIÓN: AGREGADO CAMPO NOMBRE ---
+            TextFieldModificado(
+                newValue = name,
+                onChange = { name = it },
+                isPassword = false,
+                label = "Nombre Completo"
+            )
 
-                // Campo para escribir el correo.
-                TextFieldModificado(email, { email = it }, false, "Correo")
+            Spacer(modifier = Modifier.height(16.dp))
 
+            TextFieldModificado(
+                newValue = email,
+                onChange = { email = it },
+                isPassword = false,
+                label = "Correo"
+            )
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                // Campo para escribir la contraseña.
-                TextFieldModificado(password, { password = it }, true, "Contraseña")
+            TextFieldModificado(
+                newValue = password,
+                onChange = { password = it },
+                isPassword = true,
+                label = "Contraseña"
+            )
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
+            TextFieldModificado(
+                newValue = confirmPassword,
+                onChange = { confirmPassword = it },
+                isPassword = true,
+                label = "Confirmar contraseña"
+            )
 
-                // Campo para confirmar la contraseña.
-                TextFieldModificado(confirmPassword, { confirmPassword = it }, true, "Confirmar contraseña")
+            Spacer(modifier = Modifier.height(24.dp))
 
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Botón para registrarse.
-                ButtonModificado("Registrarse", {
-                    if (password != confirmPassword) {
-                        localError = "Las contraseñas deben coincidir"
-                    } else {
+            ButtonModificado(text = "Registrarse", onClick = {
+                // --- CORRECCIÓN: VALIDACIONES ---
+                when {
+                    name.isBlank() -> localError = "El nombre no puede estar vacío"
+                    email.isBlank() -> localError = "El correo es obligatorio"
+                    password.length < 6 -> localError = "La contraseña debe tener al menos 6 caracteres"
+                    password != confirmPassword -> localError = "Las contraseñas deben coincidir"
+                    else -> {
                         localError = null
                         onRegister(email.trim(), password.trim(), name.trim(), confirmPassword.trim())
                     }
-                })
-
-                // Si hay un error local, lo mostramos.
-                localError?.let {
-                    Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
                 }
+            })
 
+            localError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp),
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
+            // Manejo de errores que vienen del servidor/firebase
+            if (authState is AuthState.Error) {
+                Text(
+                    text = (authState as AuthState.Error).message,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
 
-                // Mostramos un indicador de carga o error según el estado de autenticación.
-                when (authState) {
-                    is AuthState.Loading -> CircularProgressIndicator()
-                    is AuthState.Error -> Text(
-                        text = (authState as AuthState.Error).message,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                    else -> {}
-                }
+            if (authState is AuthState.Loading) {
+                CircularProgressIndicator(color = BrownP, modifier = Modifier.padding(top = 16.dp))
             }
         }
     }

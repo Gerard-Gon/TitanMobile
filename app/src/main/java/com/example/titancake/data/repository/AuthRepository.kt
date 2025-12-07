@@ -1,6 +1,7 @@
 package com.example.titancake.data.repository
 
 import android.content.Context
+import android.util.Log
 import com.example.titancake.data.local.SessionManager
 import com.example.titancake.data.model.Usuario
 import com.example.titancake.data.model.UsuarioRequest
@@ -26,7 +27,9 @@ class AuthRepository(context: Context) {
 
             // 2. Buscar usuario en Backend PostgreSQL para obtener su ID numérico
             val usuariosApi = api.getUsuarios()
-            val usuarioBackend = usuariosApi.find { it.correo == email }
+            val usuarioBackend = usuariosApi.find {
+                it.correo.equals(email, ignoreCase = true)
+            }
 
             if (usuarioBackend != null) {
                 currentUserBackend = usuarioBackend
@@ -34,7 +37,8 @@ class AuthRepository(context: Context) {
                 sessionManager.saveUid(uid)
                 Result.success(uid)
             } else {
-                Result.failure(Exception("Usuario no encontrado en base de datos TitanCake"))
+                auth.signOut()
+                Result.failure(Exception("Cuenta desincronizada: Existe en Firebase pero no en tu Base de Datos."))
             }
         } catch (e: Exception) {
             Result.failure(e)
@@ -45,7 +49,7 @@ class AuthRepository(context: Context) {
         return try {
             // 1. Crear en Firebase
             val result = auth.createUserWithEmailAndPassword(email, password).await()
-            val uid = result.user?.uid ?: return Result.failure(Exception("Error UID"))
+            val uid = result.user?.uid ?: return Result.failure(Exception("Error obteniendo UID de Firebase"))
 
             // 2. Crear en Backend API
             // Asumimos Rol 2 para clientes (ajusta el ID según tu DB: 1 Admin, 2 User)
@@ -53,17 +57,23 @@ class AuthRepository(context: Context) {
                 nombre = name,
                 correo = email,
                 contrasena = password, // Enviamos la pass para que el backend la guarde (hasheada allá)
-                rol = UsuarioRol(2) // Ajusta este ID según tu tabla de roles
+                rol = UsuarioRol(2),
+                authFireBase = uid
             )
 
             val response = api.addUsuario(nuevoUsuario)
 
             if (response.isSuccessful) {
                 sessionManager.saveUid(uid)
+                currentUserBackend = response.body()
                 Result.success(uid)
             } else {
-                // Si falla el backend, deberíamos borrar el de firebase (rollback manual),
-                // pero por simplicidad retornamos error.
+                val errorBody = response.errorBody()?.string() ?: "Error desconocido"
+                Log.e("AuthRepo", "Fallo Backend: $errorBody")
+
+                // IMPORTANTE: Si falla el backend, deberíamos borrar el usuario de Firebase
+                // para no dejar "usuarios zombies", pero por ahora lanzamos el error.
+                auth.currentUser?.delete()
                 Result.failure(Exception("Error creando usuario en Backend: ${response.code()}"))
             }
         } catch (e: Exception) {
