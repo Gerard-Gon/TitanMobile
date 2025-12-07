@@ -1,14 +1,23 @@
 package com.example.titancake.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.titancake.data.model.CarritoId
+import com.example.titancake.data.model.CarritoRequest
 import com.example.titancake.data.model.ItemCarrito
+import com.example.titancake.data.model.ItemCarritoRequest
 import com.example.titancake.data.model.Producto
+import com.example.titancake.data.model.ProductoId
+import com.example.titancake.data.model.UsuarioId
+import com.example.titancake.data.remote.RetrofitInstance
+import com.example.titancake.data.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 // ViewModel que maneja la lógica del carrito de compras en TitanCake.
-class CartViewModel : ViewModel() {
+class CartViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     // Estado interno del carrito: una lista de productos con su cantidad.
     private val _carrito = MutableStateFlow<List<ItemCarrito>>(emptyList())
@@ -55,6 +64,63 @@ class CartViewModel : ViewModel() {
 
     // Calcula el total a pagar sumando el precio por cantidad de cada producto.
     fun total(): Int = _carrito.value.sumOf { it.producto.precio * it.cantidad }
+
+    fun confirmarCompra(onSuccess: () -> Unit, onError: (String) -> Unit) {
+        val usuario = authRepository.currentUserBackend
+        val itemsActuales = _carrito.value
+
+        if (usuario == null) {
+            onError("Usuario no identificado. Reinicie sesión.")
+            return
+        }
+        if (itemsActuales.isEmpty()) {
+            onError("El carrito está vacío.")
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val api = RetrofitInstance.api
+
+                // 1. Crear el Carrito (Cabecera)
+                val carritoReq = CarritoRequest(usuario = UsuarioId(usuario.id))
+                val respCarrito = api.createCarrito(carritoReq)
+
+                if (!respCarrito.isSuccessful || respCarrito.body() == null) {
+                    onError("Error al iniciar la compra")
+                    return@launch
+                }
+
+                val carritoId = respCarrito.body()!!.id
+
+                // 2. Iterar items para Guardar Detalle y Actualizar Stock
+                itemsActuales.forEach { itemLocal ->
+                    // A. Guardar Item en Backend
+                    val itemReq = ItemCarritoRequest(
+                        cantidad = itemLocal.cantidad,
+                        precioUnitario = itemLocal.producto.precio,
+                        carrito = CarritoId(carritoId),
+                        producto = ProductoId(itemLocal.producto.id)
+                    )
+                    api.createItemCarrito(itemReq)
+
+                    // B. Actualizar Stock (Reducir)
+                    val nuevoStock = itemLocal.producto.stock - itemLocal.cantidad
+                    // Creamos una copia del producto con el stock actualizado
+                    val productoActualizado = itemLocal.producto.copy(stock = if (nuevoStock < 0) 0 else nuevoStock)
+
+                    api.updateProducto(itemLocal.producto.id, productoActualizado)
+                }
+
+                // 3. Finalizar
+                vaciarCarrito()
+                onSuccess()
+
+            } catch (e: Exception) {
+                onError("Error de conexión: ${e.message}")
+            }
+        }
+    }
 
 }
 

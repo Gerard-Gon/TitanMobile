@@ -138,9 +138,21 @@ fun ShoppingCartScreen(
                     // Botón para confirmar la compra.
 
                     Button(
-                    onClick = {
-                        isLoading = true
-                    },
+                        onClick = {
+                            isLoading = true
+                            // Llamamos a la función que conecta con el backend
+                            cartViewModel.confirmarCompra(
+                                onSuccess = {
+                                    isLoading = false
+                                    onConfirm() // Navega a la boleta
+                                },
+                                onError = { errorMsg ->
+                                    isLoading = false
+                                    // Aquí podrías mostrar un Toast o Snackbar con el error
+                                    println("Error compra: $errorMsg")
+                                }
+                            )
+                        },
                     enabled = !isLoading,
                     modifier = Modifier
                         .fillMaxWidth()

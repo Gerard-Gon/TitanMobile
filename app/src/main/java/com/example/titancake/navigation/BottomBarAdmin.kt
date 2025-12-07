@@ -2,6 +2,7 @@ package com.example.titancake.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -15,6 +16,7 @@ import androidx.navigation.compose.*
 // Esta clase representa cada ítem del menú inferior (bottom navigation bar).
 sealed class BottomNavItemAdmin(val route: String, val label: String, val icon: ImageVector) {
     object Home : BottomNavItemAdmin(Routes.HOMEADMIN, "Inicio", Icons.Default.Home)
+    object Ventas : BottomNavItemAdmin(Routes.SALES_ADMIN, "Ventas", Icons.Default.AttachMoney)
     object Profile : BottomNavItemAdmin(Routes.PROFILEADMIN, "Perfil", Icons.Default.Person)
     object ShoppingCart : BottomNavItemAdmin(Routes.SHOPPINGCARTADMIN, "Carrito", Icons.Default.ShoppingCart)
     object AdministrarProducto : BottomNavItemAdmin(Routes.ADMIN, "Admin", Icons.Default.Add)

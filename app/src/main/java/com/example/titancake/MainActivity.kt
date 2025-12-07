@@ -31,7 +31,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             TitanCakeTheme { AppNavGraph(
                 authViewModel = authViewModel,
-                isLoggedIn = isLoggedIn
+                isLoggedIn = isLoggedIn,
+                authRepository = repository
             ) }
         }
     }

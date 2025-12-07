@@ -9,12 +9,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,6 +57,16 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.ui.graphics.Color
+import com.example.titancake.ui.theme.Black
 
 suspend fun uploadImage(file: File): String? {
     val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
@@ -77,6 +89,7 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
     val authState by authViewModel.authState.collectAsState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val usuarioBackend = authViewModel.currentUserBackend
 
 
     // Variable que guarda la imagen seleccionada por el usuario.
@@ -160,13 +173,13 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
     ) {
         // Título de la pantalla.
         Text(
-            text = "Perfil de Usuario",
+            text = "Mi Perfil",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = BrownP
         )
 
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(24.dp))
 
         // Si el usuario ya seleccionó una imagen, la mostramos dentro de una tarjeta.
         if (imageUri != null || localImageBitmap != null) {
@@ -245,7 +258,40 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
             Spacer(Modifier.height(16.dp))
         }
 
+
         Spacer(Modifier.height(16.dp))
+
+        Card(
+            colors = CardDefaults.cardColors(containerColor = White),
+            elevation = CardDefaults.cardElevation(4.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+
+                ProfileItem(icon = Icons.Default.Person, label = "Nombre", value = usuarioBackend?.nombre ?: "Cargando...")
+                Divider(color = BeigeP)
+                ProfileItem(icon = Icons.Default.Email, label = "Correo", value = usuarioBackend?.correo ?: "Cargando...")
+                Divider(color = BeigeP)
+                // Estos campos NO existen en tu DB Backend aun, los pongo visuales
+                ProfileItem(icon = Icons.Default.Home, label = "Dirección", value = "Sin registrar (Requiere actualización DB)")
+                Divider(color = BeigeP)
+                ProfileItem(icon = Icons.Default.Phone, label = "Teléfono", value = "+56 9 1234 5678 (Dummy)")
+            }
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        // --- BOTÓN HISTORIAL DE COMPRAS ---
+        Button(
+            onClick = { /* Navegar a pantalla de historial (por implementar) */ },
+            colors = ButtonDefaults.buttonColors(containerColor = BrownP),
+            modifier = Modifier.fillMaxWidth().height(50.dp),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Icon(Icons.Default.ShoppingBag, contentDescription = null, tint = BeigeP)
+            Spacer(Modifier.width(8.dp))
+            Text("Ver Mis Compras", color = BeigeP, fontSize = 16.sp)
+        }
 
         // Botón para cerrar sesión.
         Button(
@@ -264,6 +310,18 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Cerrar sesión", color = BeigeP)
+        }
+    }
+}
+
+@Composable
+fun ProfileItem(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String) {
+    Row(modifier = Modifier.padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Icon(icon, contentDescription = null, tint = BrownP, modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(text = label, fontSize = 12.sp, color = Color.Gray)
+            Text(text = value, fontSize = 16.sp, color = Black, fontWeight = FontWeight.SemiBold)
         }
     }
 }

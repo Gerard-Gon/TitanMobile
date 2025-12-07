@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.titancake.data.model.Usuario
 import com.example.titancake.data.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.flow.*
@@ -30,6 +31,9 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
     private val _currentUid = MutableStateFlow<String?>(null)
     val currentUid: StateFlow<String?> = _currentUid.asStateFlow()
+
+    val currentUserBackend: Usuario?
+        get() = repository.currentUserBackend
 
     init {
         viewModelScope.launch {

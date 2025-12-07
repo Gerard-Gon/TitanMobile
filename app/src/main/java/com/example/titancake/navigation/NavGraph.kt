@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.titancake.data.repository.AuthRepository
 import com.example.titancake.ui.screens.BoletaScreen
 import com.example.titancake.ui.screens.DetailScreen
 import com.example.titancake.ui.screens.HomeScreen
@@ -23,29 +24,34 @@ import com.example.titancake.ui.screens.admin.AdminScreen
 import com.example.titancake.ui.screens.admin.DetailScreenAdmin
 import com.example.titancake.ui.screens.admin.HomeScreenAdmin
 import com.example.titancake.ui.screens.admin.ProfileScreenAdmin
+import com.example.titancake.ui.screens.admin.SalesScreenAdmin
 import com.example.titancake.ui.screens.admin.ShoppingCartScreenAdmin
 import com.example.titancake.ui.viewmodel.AuthViewModel
 import com.example.titancake.ui.viewmodel.CartViewModel
+import com.example.titancake.ui.viewmodel.CartViewModelFactory
 import com.example.titancake.ui.viewmodel.MainViewModel
 
 @Composable
 // Esta función define toda la navegación de la app TitanCake.
-fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
+fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean, authRepository: AuthRepository) {
     // Creamos el controlador de navegación, que nos permite movernos entre pantallas.
     val navController = rememberNavController()
     // Creamos el ViewModel del carrito, que guarda los productos.
-    val cartViewModel: CartViewModel = viewModel()
+    val cartViewModel: CartViewModel = viewModel(
+        factory = CartViewModelFactory(authRepository)
+    )
     // Definimos los ítems que aparecerán en la barra inferior de navegación.
     val bottomItems = listOf(BottomNavItem.Home, BottomNavItem.ShoppingCart,BottomNavItem.Profile)
     val bottomItemsAdmin = listOf(
         BottomNavItemAdmin.Home,
+        BottomNavItemAdmin.Ventas,
         BottomNavItemAdmin.Profile,
         BottomNavItemAdmin.ShoppingCart,
         BottomNavItemAdmin.AdministrarProducto
     )
     // Estas son las rutas donde queremos que se muestre la barra inferior.
     val showBottomBarRoutes = listOf(Routes.HOME, Routes.PROFILE, Routes.SHOPPINGCART)
-    val showBottomBarAdminRoutes = listOf(Routes.HOMEADMIN, Routes.PROFILEADMIN, Routes.SHOPPINGCARTADMIN, Routes.ADMIN)
+    val showBottomBarAdminRoutes = listOf(Routes.HOMEADMIN, Routes.PROFILEADMIN, Routes.SHOPPINGCARTADMIN, Routes.ADMIN, Routes.SALES_ADMIN)
     // Obtenemos la ruta actual para saber si debemos mostrar la barra inferior.
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
@@ -173,6 +179,10 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean) {
             val vm: MainViewModel = viewModel()
             val id = backStackEntry.arguments?.getInt("itemId") ?: -1
             DetailScreenAdmin(itemId = id, viewModel = vm, onBack = { navController.popBackStack() })
+        }
+
+        composable(Routes.SALES_ADMIN) {
+            SalesScreenAdmin()
         }
 
         // Pantalla de perfil del usuario.

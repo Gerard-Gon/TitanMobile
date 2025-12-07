@@ -1,5 +1,10 @@
 package com.example.titancake.data.remote
 
+import com.example.titancake.data.model.CarritoRequest
+import com.example.titancake.data.model.CarritoResponse
+import com.example.titancake.data.model.ItemCarritoBackend
+import com.example.titancake.data.model.ItemCarritoRequest
+import com.example.titancake.data.model.ItemCarritoResponse
 import com.example.titancake.data.model.Producto
 import com.example.titancake.data.model.ProductoRequest
 import com.example.titancake.data.model.Usuario
@@ -62,6 +67,23 @@ interface ApiService {
         @Body usuario: UsuarioRequest
     ): Response<Usuario>
 
+    @GET("api/v1/usuarios")
+    suspend fun getUsuarioByEmail(): List<Usuario>
+
     //CRUD CARRITO
+
+    @POST("api/v1/carritos")
+    suspend fun createCarrito(@Body carrito: CarritoRequest): Response<CarritoResponse>
+
+    @POST("api/v1/itemscarrito")
+    suspend fun createItemCarrito(@Body item: ItemCarritoRequest): Response<ItemCarritoResponse>
+
+    @GET("api/v1/carritos")
+    suspend fun getCarritos(): List<CarritoResponse>
+
+    //REPORTE ADMIN
+
+    @GET("api/v1/itemscarrito")
+    suspend fun getAllVentas(): List<ItemCarritoBackend>
 
 }

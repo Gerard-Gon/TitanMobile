@@ -12,6 +12,8 @@ object Routes {
 
     const val DETAILADMIN = "detailAdmin/{itemId}"
 
+    const val SALES_ADMIN = "salesAdmin"
+
     fun detailRoute(id: Int) = "detail/$id"
 
     fun detailAdminRoute(id: Int) = "detailAdmin/$id"
