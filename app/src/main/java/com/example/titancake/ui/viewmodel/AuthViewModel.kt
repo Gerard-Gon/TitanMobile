@@ -43,19 +43,47 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun login(email: String, password: String) {
+    fun login(email: String, password: String, esLoginAdmin: Boolean) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
             val result = repository.login(email, password)
-            _authState.value = result.fold(
-                onSuccess = { AuthState.Success(it) },
+
+            result.fold(
+                onSuccess = { uid ->
+                    // Login exitoso en Firebase y Backend. Ahora validamos el ROL.
+                    val usuario = repository.currentUserBackend
+
+                    if (usuario != null) {
+                        val rolId = usuario.rol.id
+
+                        // CASO 1: Intenta entrar como Admin (esLoginAdmin = true) pero su rol no es 1
+                        if (esLoginAdmin && rolId != 1) {
+                            repository.logout() // Lo sacamos inmediatamente
+                            _authState.value = AuthState.Error("Esta cuenta no tiene permisos de Administrador.")
+                        }
+                        // CASO 2: Intenta entrar como Cliente (esLoginAdmin = false) pero es Admin (rol 1)
+                        else if (!esLoginAdmin && rolId == 1) {
+                            repository.logout()
+                            _authState.value = AuthState.Error("Eres Administrador, por favor inicia como tal.")
+                        }
+                        // CASO 3: Todo coincide
+                        else {
+                            // Actualizamos la variable para la navegación
+                            isAdmin = (rolId == 1)
+                            _authState.value = AuthState.Success(uid)
+                        }
+                    } else {
+                        // Caso raro: Firebase ok, pero backend falló silenciosamente
+                        _authState.value = AuthState.Error("Error obteniendo datos del usuario.")
+                    }
+                },
                 onFailure = {
                     val errorCode = (it as? FirebaseAuthException)?.errorCode
                     val messageAux2 = when (errorCode) {
                         "ERROR_INVALID_EMAIL" -> "El correo es inválido o está mal escrito"
                         else -> "La contraseña o el correo es incorrecto"
                     }
-                    AuthState.Error(messageAux2)
+                    _authState.value = AuthState.Error(messageAux2)
                 }
             )
         }
