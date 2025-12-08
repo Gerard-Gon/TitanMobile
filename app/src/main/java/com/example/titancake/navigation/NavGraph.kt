@@ -80,17 +80,28 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean, authRepositor
         // Pantalla de presentacion (Splash)
         composable("splash") {
             SplashScreen {
-                if (isLoggedIn) {
-                    if (authViewModel.isAdmin) {
+                // --- CAMBIO CLAVE AQUÍ ---
+                // Ignoramos 'isLoggedIn' de Firebase porque no garantiza que tengamos
+                // los datos del backend (Rol, Nombre) cargados en memoria RAM.
+                // Verificamos directamente si el ViewModel tiene los datos.
+                val usuarioCargado = authViewModel.currentUserBackend
+
+                if (usuarioCargado != null) {
+                    // Si por algún milagro los datos siguen en memoria, vamos al home correspondiente
+                    if (usuarioCargado.rol.id == 1) { // 1 = Admin
+                        authViewModel.isAdmin = true
                         navController.navigate("homeAdmin") {
                             popUpTo("splash") { inclusive = true }
                         }
                     } else {
+                        authViewModel.isAdmin = false
                         navController.navigate("home") {
                             popUpTo("splash") { inclusive = true }
                         }
                     }
                 } else {
+                    // Si no hay datos en memoria (lo normal al reiniciar), vamos al Login.
+                    // Esto soluciona el problema de tener que hacer logout manual.
                     navController.navigate("login") {
                         popUpTo("splash") { inclusive = true }
                     }
@@ -101,7 +112,7 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean, authRepositor
         // Pantallla de inicio de sesion.
         composable("login") {
             LoginScreen(
-                onLogin = { email, pass -> authViewModel.login(email, pass) },
+                onLogin = { email, pass, isAdmin -> authViewModel.login(email, pass, isAdmin) },
                 onNavigateToRegister = { navController.navigate("register") },
                 onSuccessCliente = {
                     navController.navigate("home") {

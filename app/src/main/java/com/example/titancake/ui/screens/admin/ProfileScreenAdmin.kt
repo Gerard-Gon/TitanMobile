@@ -196,14 +196,7 @@ fun ProfileScreenAdmin(authViewModel: AuthViewModel, navControllerApp: NavHostCo
                     label = "Correo",
                     value = usuarioBackend?.correo ?: "Cargando..."
                 )
-                Divider(color = BeigeP)
 
-                // Teléfono (Dummy, igual que en User) - Dirección ELIMINADA
-                ProfileItemAdmin(
-                    icon = Icons.Default.Phone,
-                    label = "Teléfono",
-                    value = "+56 9 1234 5678 (Admin)"
-                )
             }
         }
 

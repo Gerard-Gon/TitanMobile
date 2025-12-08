@@ -36,7 +36,7 @@ import com.example.titancake.ui.viewmodel.AuthViewModel
 @Composable
 // Esta pantalla permite al usuario iniciar sesión en TitanCake.
 fun LoginScreen(
-    onLogin: (String, String) -> Unit,
+    onLogin: (String, String, Boolean) -> Unit, // <--- Boolean: esAdmin
     onNavigateToRegister: () -> Unit,
     onSuccessCliente: () -> Unit,
     onSuccessAdmin: () -> Unit,
@@ -45,13 +45,12 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var localError by remember { mutableStateOf<String?>(null) }
-    var adminLogin by remember { mutableStateOf(false) }
 
     val authState by authViewModel.authState.collectAsState()
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
-            if (adminLogin) onSuccessAdmin() else onSuccessCliente()
+            if (authViewModel.isAdmin) onSuccessAdmin() else onSuccessCliente()
         }
     }
 
@@ -85,9 +84,7 @@ fun LoginScreen(
                         localError = "La contraseña no puede estar vacía"
                     } else {
                         localError = null
-                        adminLogin = false
-                        authViewModel.isAdmin = false
-                        onLogin(email, password)
+                        onLogin(email, password, false)
                     }
                 }
             )
@@ -101,9 +98,7 @@ fun LoginScreen(
                         localError = "La contraseña no puede estar vacía"
                     } else {
                         localError = null
-                        adminLogin = true
-                        authViewModel.isAdmin = true
-                        onLogin(email, password)
+                        onLogin(email, password, true)
                     }
                 }
             )

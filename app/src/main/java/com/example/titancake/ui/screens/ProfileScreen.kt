@@ -273,10 +273,6 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
                 Divider(color = BeigeP)
                 ProfileItem(icon = Icons.Default.Email, label = "Correo", value = usuarioBackend?.correo ?: "Cargando...")
                 Divider(color = BeigeP)
-                // Estos campos NO existen en tu DB Backend aun, los pongo visuales
-                ProfileItem(icon = Icons.Default.Home, label = "Dirección", value = "Sin registrar (Requiere actualización DB)")
-                Divider(color = BeigeP)
-                ProfileItem(icon = Icons.Default.Phone, label = "Teléfono", value = "+56 9 1234 5678 (Dummy)")
             }
         }
 
