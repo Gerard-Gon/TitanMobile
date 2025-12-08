@@ -113,7 +113,7 @@ class CartViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 }
 
                 // 3. Finalizar
-                vaciarCarrito()
+                //vaciarCarrito()
                 onSuccess()
 
             } catch (e: Exception) {

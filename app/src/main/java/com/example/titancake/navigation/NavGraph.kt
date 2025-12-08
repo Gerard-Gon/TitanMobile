@@ -14,6 +14,8 @@ import androidx.navigation.navArgument
 import com.example.titancake.data.repository.AuthRepository
 import com.example.titancake.ui.screens.BoletaScreen
 import com.example.titancake.ui.screens.DetailScreen
+import com.example.titancake.ui.screens.HistoryDetailScreen
+import com.example.titancake.ui.screens.HistoryScreen
 import com.example.titancake.ui.screens.HomeScreen
 import com.example.titancake.ui.screens.LoginScreen
 import com.example.titancake.ui.screens.ProfileScreen
@@ -224,6 +226,19 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean, authRepositor
             val vm: MainViewModel = viewModel()
             val id = backStackEntry.arguments?.getInt("itemId") ?: -1
             DetailScreen(itemId = id, viewModel = vm, onBack = { navController.popBackStack() })
+        }
+
+        composable(Routes.HISTORY) {
+            HistoryScreen(navController = navController, authViewModel = authViewModel)
+        }
+
+        composable(
+            route = Routes.HISTORY_DETAIL,
+            arguments = listOf(androidx.navigation.navArgument("carritoId") { type = androidx.navigation.NavType.IntType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getInt("carritoId") ?: -1
+            // Llamamos a la nueva pantalla pasándole el ID
+            HistoryDetailScreen(navController = navController, carritoId = id)
         }
 
 

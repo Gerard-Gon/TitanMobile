@@ -36,7 +36,7 @@ fun BoletaScreen(cartViewModel: CartViewModel, onTimeout: () -> Unit) {
     val totalFinal = totalCompra + impuesto
 
     LaunchedEffect(true) {
-        delay(3000)
+        delay(4000)
         onTimeout()
         cartViewModel.vaciarCarrito()
     }

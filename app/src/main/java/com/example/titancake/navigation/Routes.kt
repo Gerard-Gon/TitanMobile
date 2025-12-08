@@ -14,9 +14,14 @@ object Routes {
 
     const val SALES_ADMIN = "salesAdmin"
 
+    const val HISTORY = "history"
+
+    const val HISTORY_DETAIL = "history_detail/{carritoId}"
+
     fun detailRoute(id: Int) = "detail/$id"
 
     fun detailAdminRoute(id: Int) = "detailAdmin/$id"
+    fun historyDetailRoute(id: Int) = "history_detail/$id"
 
 
 }

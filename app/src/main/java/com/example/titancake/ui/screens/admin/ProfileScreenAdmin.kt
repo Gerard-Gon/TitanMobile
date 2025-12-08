@@ -8,30 +8,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -44,6 +32,7 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.titancake.data.remote.RetrofitInstance
 import com.example.titancake.ui.theme.BeigeP
+import com.example.titancake.ui.theme.Black
 import com.example.titancake.ui.theme.BrownP
 import com.example.titancake.ui.theme.PurpleGrey40
 import com.example.titancake.ui.theme.White
@@ -56,6 +45,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+// Función auxiliar para subir imagen (Misma lógica anterior)
 suspend fun uploadImage(file: File): String? {
     val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
     val multipart = MultipartBody.Part.createFormData("file", file.name, requestBody)
@@ -71,86 +61,61 @@ suspend fun uploadImage(file: File): String? {
 }
 
 @Composable
-// Esta pantalla muestra el perfil del usuario en TitanCake.
 fun ProfileScreenAdmin(authViewModel: AuthViewModel, navControllerApp: NavHostController) {
-    // Observamos el estado de autenticación (por si el usuario cierra sesión).
     val authState by authViewModel.authState.collectAsState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
+    // --- AGREGADO: Obtenemos los datos del administrador ---
+    val usuarioBackend = authViewModel.currentUserBackend
 
-    // Variable que guarda la imagen seleccionada por el usuario.
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var localImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var uploadedImageUrl by remember { mutableStateOf<String?>(null) }
 
-    // Lanzador para abrir la galería y seleccionar una imagen.
+    // Launchers de imagen (Misma lógica anterior)
     val selectImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        imageUri = uri // Guardamos la imagen seleccionada.
-    }
+    ) { uri -> imageUri = uri }
 
-    //Launcher para pedir permiso de cámara
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { granted ->
-            if (!granted) {
-                println("Permiso de cámara denegado")
-            }
-        }
+        onResult = { granted -> if (!granted) println("Permiso de cámara denegado") }
     )
 
-    //Launcher para tomar foto
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
         bitmap?.let {
             localImageBitmap = it
             val file = File(context.cacheDir, "photo_${System.currentTimeMillis()}.jpg")
-            FileOutputStream(file).use { out ->
-                it.compress(Bitmap.CompressFormat.JPEG, 100, out)
-            }
-
-            coroutineScope.launch {
-                uploadedImageUrl = uploadImage(file)
-            }
+            FileOutputStream(file).use { out -> it.compress(Bitmap.CompressFormat.JPEG, 100, out) }
+            coroutineScope.launch { uploadedImageUrl = uploadImage(file) }
         }
     }
 
-    //Launcher para elegir desde galería
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
             imageUri = it
-            // Copiar el archivo desde la URI a un archivo temporal
             val inputStream: InputStream? = context.contentResolver.openInputStream(it)
             val file = File(context.cacheDir, "gallery_${System.currentTimeMillis()}.jpg")
             val outputStream = FileOutputStream(file)
             inputStream?.copyTo(outputStream)
             inputStream?.close()
             outputStream.close()
-
-            coroutineScope.launch {
-                uploadedImageUrl = uploadImage(file)
-            }
+            coroutineScope.launch { uploadedImageUrl = uploadImage(file) }
         }
     }
 
-    //Pedir permiso de cámara al iniciar
     LaunchedEffect(Unit) {
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.CAMERA
-        )
+        val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
-
-    // Estructura principal de la pantalla.
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,7 +123,6 @@ fun ProfileScreenAdmin(authViewModel: AuthViewModel, navControllerApp: NavHostCo
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Título de la pantalla.
         Text(
             text = "Perfil de Admin",
             fontSize = 24.sp,
@@ -166,14 +130,12 @@ fun ProfileScreenAdmin(authViewModel: AuthViewModel, navControllerApp: NavHostCo
             color = BrownP
         )
 
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(24.dp))
 
-        // Si el usuario ya seleccionó una imagen, la mostramos dentro de una tarjeta.
+        // --- SECCIÓN DE FOTO (Igual que antes) ---
         if (imageUri != null || localImageBitmap != null) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .height(300.dp),
+                modifier = Modifier.fillMaxWidth(0.9f).height(250.dp),
                 colors = CardDefaults.cardColors(containerColor = PurpleGrey40)
             ) {
                 if (localImageBitmap != null) {
@@ -192,78 +154,91 @@ fun ProfileScreenAdmin(authViewModel: AuthViewModel, navControllerApp: NavHostCo
                     )
                 }
             }
-
-
             Spacer(Modifier.height(16.dp))
         }
 
-        Button(
-            onClick = { takePictureLauncher.launch(null) },
-            colors = ButtonDefaults.buttonColors(containerColor = BrownP),
+        // Botones de Foto
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = { takePictureLauncher.launch(null) },
+                colors = ButtonDefaults.buttonColors(containerColor = BrownP),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Cámara", color = BeigeP)
+            }
+            Button(
+                onClick = { selectImageLauncher.launch("image/*") },
+                colors = ButtonDefaults.buttonColors(containerColor = BrownP),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Galería", color = BeigeP)
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // --- NUEVA SECCIÓN: DATOS DEL ADMINISTRADOR ---
+        Card(
+            colors = CardDefaults.cardColors(containerColor = White),
+            elevation = CardDefaults.cardElevation(4.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Tomar Foto", color = BeigeP)
+            Column(modifier = Modifier.padding(16.dp)) {
+                ProfileItemAdmin(
+                    icon = Icons.Default.Person,
+                    label = "Nombre",
+                    value = usuarioBackend?.nombre ?: "Cargando..."
+                )
+                Divider(color = BeigeP)
+
+                ProfileItemAdmin(
+                    icon = Icons.Default.Email,
+                    label = "Correo",
+                    value = usuarioBackend?.correo ?: "Cargando..."
+                )
+                Divider(color = BeigeP)
+
+                // Teléfono (Dummy, igual que en User) - Dirección ELIMINADA
+                ProfileItemAdmin(
+                    icon = Icons.Default.Phone,
+                    label = "Teléfono",
+                    value = "+56 9 1234 5678 (Admin)"
+                )
+            }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.weight(1f))
 
-        // Botón para seleccionar una imagen desde la galería.
-        Button(
-            onClick = { selectImageLauncher.launch("image/*") },
-            colors = ButtonDefaults.buttonColors(containerColor = BrownP),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Elegir desde Galeria", color = BeigeP)
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        uploadedImageUrl?.let { url ->
-            Text(
-                text = "Imagen subida correctamente",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = BrownP
-            )
-
-            AsyncImage(
-                model = url,
-                contentDescription = url.replace("http://", "https://"),
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(4.dp)),
-                contentScale = ContentScale.Crop
-            )
-
-            Text(
-                text = url.replace("http://", "https://"),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = BrownP
-            )
-
-            Spacer(Modifier.height(16.dp))
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        // Botón para cerrar sesión.
+        // Botón Cerrar Sesión
         Button(
             onClick = {
                 try {
                     authViewModel.logout()
                     navControllerApp.navigate("login") {
-                        popUpTo("home") { inclusive = true } // Volvemos al login y limpiamos el historial.
+                        popUpTo("home") { inclusive = true }
                     }
-                } catch (err: Exception) {
-                    // Si algo falla, lo ignoramos por ahora.
-                }
-
+                } catch (err: Exception) {}
             },
             colors = ButtonDefaults.buttonColors(containerColor = PurpleGrey40),
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Cerrar sesión", color = BeigeP)
+        }
+    }
+}
+
+// Componente para las filas de datos (reutilizado localmente para el admin)
+@Composable
+fun ProfileItemAdmin(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String) {
+    Row(
+        modifier = Modifier.padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, contentDescription = null, tint = BrownP, modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(text = label, fontSize = 12.sp, color = Color.Gray)
+            Text(text = value, fontSize = 16.sp, color = Black, fontWeight = FontWeight.SemiBold)
         }
     }
 }

@@ -51,21 +51,29 @@ class AdminSalesViewModel : ViewModel() {
 
                         // Calculamos el total de ESTA venta específica
                         // CAMBIO: Usamos 'itemVenta ->' para evitar confusión
-                        val totalDeEstaVenta = listaDeItems.sumOf { itemVenta ->
-                            itemVenta.cantidad * itemVenta.precioUnitario
-                        }
+                        // Calculamos Subtotal (Neto)
+                        val subtotal = listaDeItems.sumOf { it.cantidad * it.precioUnitario }
+
+                        // Calculamos IVA y Total
+                        val iva = (subtotal * 0.19).toInt()
+                        val totalFinal = subtotal + iva
 
                         VentaAgrupada(
                             carritoId = carritoId,
                             nombreUsuario = usuarioNombre,
                             items = listaDeItems,
-                            totalVenta = totalDeEstaVenta
+                            subtotal = subtotal,
+                            totalConIva = totalFinal
                         )
                     }
                     // CAMBIO: Usamos 'venta ->' para ordenar
                     .sortedByDescending { venta -> venta.carritoId }
 
                 _ventas.value = agrupadas
+
+                // 3. Calculamos el Total Histórico sumando los Totales CON IVA
+                val sumaTotalHistorica = agrupadas.sumOf { it.totalConIva }
+                _totalHistorico.value = sumaTotalHistorica
 
             } catch (e: Exception) {
                 println("Error cargando ventas: ${e.message}")

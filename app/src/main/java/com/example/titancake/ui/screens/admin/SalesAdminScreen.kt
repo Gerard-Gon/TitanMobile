@@ -102,9 +102,11 @@ fun SalesScreenAdmin(viewModel: AdminSalesViewModel = viewModel()) {
 fun VentaItemRow(venta: VentaAgrupada) {
     Card(
         colors = CardDefaults.cardColors(containerColor = White),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Encabezado: ID Pedido y Cliente
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -112,19 +114,19 @@ fun VentaItemRow(venta: VentaAgrupada) {
                 Text(
                     text = "Pedido #${venta.carritoId}",
                     fontWeight = FontWeight.Bold,
-                    color = BrownP
+                    color = BrownP,
+                    fontSize = 18.sp
                 )
                 Text(
-                    text = "$ ${venta.totalVenta}",
-                    fontWeight = FontWeight.Bold,
-                    color = Green
+                    text = venta.nombreUsuario,
+                    fontSize = 14.sp,
+                    color = Color.Gray
                 )
             }
-            Text(text = "Cliente: ${venta.nombreUsuario}", fontSize = 14.sp, color = Color.Gray)
 
             Divider(modifier = Modifier.padding(vertical = 8.dp), color = BeigeP)
 
-            // Detalle de productos breve
+            // Lista de productos (breve)
             venta.items.forEach { item ->
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
@@ -136,11 +138,49 @@ fun VentaItemRow(venta: VentaAgrupada) {
                         color = Color.DarkGray
                     )
                     Text(
-                        text = "$${item.cantidad * item.precioUnitario}",
+                        text = "$ ${item.cantidad * item.precioUnitario}", // Precio neto del item
                         fontSize = 14.sp,
                         color = Color.Gray
                     )
                 }
+            }
+
+            Divider(modifier = Modifier.padding(vertical = 8.dp), color = BeigeP)
+
+            // --- DESGLOSE DE TOTALES (NUEVO) ---
+
+            // Subtotal
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Subtotal", fontSize = 14.sp, color = Color.Gray)
+                Text("$ ${venta.subtotal}", fontSize = 14.sp, color = Color.Gray)
+            }
+
+            // IVA
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("IVA (19%)", fontSize = 14.sp, color = Color.Gray)
+                Text("$ ${venta.totalConIva - venta.subtotal}", fontSize = 14.sp, color = Color.Gray)
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Total Final Destacado
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("TOTAL PAGADO", fontWeight = FontWeight.Bold, color = BrownP)
+                Text(
+                    text = "$ ${venta.totalConIva}",
+                    fontWeight = FontWeight.Bold,
+                    color = Green,
+                    fontSize = 18.sp
+                )
             }
         }
     }

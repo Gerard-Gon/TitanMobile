@@ -66,6 +66,7 @@ import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
+import com.example.titancake.navigation.Routes
 import com.example.titancake.ui.theme.Black
 
 suspend fun uploadImage(file: File): String? {
@@ -283,7 +284,7 @@ fun ProfileScreen(authViewModel: AuthViewModel, navControllerApp: NavHostControl
 
         // --- BOTÓN HISTORIAL DE COMPRAS ---
         Button(
-            onClick = { /* Navegar a pantalla de historial (por implementar) */ },
+            onClick = { navControllerApp.navigate(Routes.HISTORY) },
             colors = ButtonDefaults.buttonColors(containerColor = BrownP),
             modifier = Modifier.fillMaxWidth().height(50.dp),
             shape = RoundedCornerShape(10.dp)

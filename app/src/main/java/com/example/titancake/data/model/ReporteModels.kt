@@ -20,5 +20,6 @@ data class VentaAgrupada(
     val carritoId: Int,
     val nombreUsuario: String,
     val items: List<ItemCarritoBackend>,
-    val totalVenta: Int
+    val subtotal: Int,
+    val totalConIva: Int
 )
