@@ -18,7 +18,6 @@ sealed class BottomNavItemAdmin(val route: String, val label: String, val icon: 
     object Home : BottomNavItemAdmin(Routes.HOMEADMIN, "Inicio", Icons.Default.Home)
     object Ventas : BottomNavItemAdmin(Routes.SALES_ADMIN, "Ventas", Icons.Default.AttachMoney)
     object Profile : BottomNavItemAdmin(Routes.PROFILEADMIN, "Perfil", Icons.Default.Person)
-    object ShoppingCart : BottomNavItemAdmin(Routes.SHOPPINGCARTADMIN, "Carrito", Icons.Default.ShoppingCart)
     object AdministrarProducto : BottomNavItemAdmin(Routes.ADMIN, "Admin", Icons.Default.Add)
 }
 @OptIn(ExperimentalMaterial3Api::class)

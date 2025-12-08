@@ -6,7 +6,6 @@ object Routes {
     const val PROFILE = "profile"
     const val PROFILEADMIN = "profileAdmin"
     const val SHOPPINGCART = "shoppingcart"
-    const val SHOPPINGCARTADMIN = "shoppingcartAdmin"
     const val ADMIN = "admin"
     const val DETAIL = "detail/{itemId}"
 

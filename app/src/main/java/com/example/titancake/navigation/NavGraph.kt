@@ -48,12 +48,11 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean, authRepositor
         BottomNavItemAdmin.Home,
         BottomNavItemAdmin.Ventas,
         BottomNavItemAdmin.Profile,
-        BottomNavItemAdmin.ShoppingCart,
         BottomNavItemAdmin.AdministrarProducto
     )
     // Estas son las rutas donde queremos que se muestre la barra inferior.
     val showBottomBarRoutes = listOf(Routes.HOME, Routes.PROFILE, Routes.SHOPPINGCART)
-    val showBottomBarAdminRoutes = listOf(Routes.HOMEADMIN, Routes.PROFILEADMIN, Routes.SHOPPINGCARTADMIN, Routes.ADMIN, Routes.SALES_ADMIN)
+    val showBottomBarAdminRoutes = listOf(Routes.HOMEADMIN, Routes.PROFILEADMIN, Routes.ADMIN, Routes.SALES_ADMIN)
     // Obtenemos la ruta actual para saber si debemos mostrar la barra inferior.
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
@@ -168,12 +167,6 @@ fun AppNavGraph(authViewModel: AuthViewModel, isLoggedIn: Boolean, authRepositor
             ProfileScreenAdmin(authViewModel = authViewModel, navControllerApp = navController)
         }
 
-        composable(Routes.SHOPPINGCARTADMIN) {
-            ShoppingCartScreenAdmin(
-                cartViewModel = cartViewModel,
-                onConfirm = { navController.navigate("boleta") }
-            )
-        }
 
         composable(Routes.ADMIN) {
             val mainViewModel: MainViewModel = viewModel()
